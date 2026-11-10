@@ -1,40 +1,48 @@
 # FLOP AI Agent Starter
 
-A Node.js agent that sends ordinary messages to OpenAI's Responses API, keeps conversation context for the current run, and handles basic local commands. FLOP network calls remain disabled until official public Testnet connection details are verified.
+A Node.js agent that can use a local Ollama model for chat, keeps current-session conversation context, and handles basic local commands. FLOP network calls stay disabled until official public Testnet connection details are verified.
 
-## Current FLOP status
+## Run free with a local model
 
-Official FLOP docs currently mark Testnet unreleased and list no verified public RPC, gateway, model catalog, or network identity. Devnet is separate and earns no rewards. See the [Testnet status](https://docs.flop.network/networks/testnet), [official links](https://docs.flop.network/docs/official-links), [technology FAQ](https://docs.flop.network/docs/technology-and-chain), and [Yellow Paper](https://github.com/flop-labs/yellowpaper).
+This setup makes model requests to Ollama on your own computer and does not use an OpenAI API key or generate per-request API charges. The model download uses disk space and inference uses your computer's memory, processor/GPU, and electricity. The starter defaults to `llama3.2:1b` (about 1.3 GB according to Ollama's model library).
 
-## Connect OpenAI
+1. Install [Ollama for Windows](https://ollama.com/download/windows) and open the Ollama app.
+2. In PowerShell, download the model once:
 
-Requires Node.js 20+. Create an API key in the [OpenAI API Platform](https://platform.openai.com/api-keys). API usage may incur charges; check [current API pricing](https://openai.com/api/pricing/) first. API keys are secret credentials: never share one in chat or commit one to GitHub.
+   ```powershell
+   ollama pull llama3.2:1b
+   ```
 
-In PowerShell, from this folder:
+3. In this project folder, update the starter and run it:
 
-```powershell
-Copy-Item .env.example .env
-notepad .env
-```
+   ```powershell
+   git pull
+   npm run status
+   npm start
+   ```
 
-In Notepad, paste the key after `OPENAI_API_KEY=` and save. You can leave `OPENAI_MODEL=gpt-6-astra`, the model used in the official OpenAI JavaScript quickstart, or change it to a model available to your API project. The `.env` file is ignored by Git. Then run:
+4. Ask a normal question at the `you>` prompt. The built-in local commands are `help`, `status`, `remember <note>`, `recall`, and `quit`.
 
-```powershell
-npm start
-```
+The agent connects only to Ollama at `http://localhost:11434/v1` in local mode. Prompts are sent to that local server; they are not sent to OpenAI. Current conversation context remains in memory for the active run. Local notes are stored separately in ignored `data/memory.jsonl`.
 
-Type a normal question to get an AI response. The model sees only the current terminal session's conversation history; local notes are stored separately and are not automatically sent to OpenAI. Type `help`, `status`, `remember <note>`, `recall`, or `quit` for local commands. Run `npm run status` to inspect configuration. The agent uses the official Responses API and keeps conversation history in memory for the current run with response storage disabled.
+## Optional OpenAI API mode
 
-The API key is read locally from `.env`. Do not put it in source code, chat, or GitHub. `.gitignore` excludes `.env` and local data.
+OpenAI API use may incur charges. To choose that instead, set `AI_PROVIDER=openai` in `.env` and configure `OPENAI_API_KEY` and `OPENAI_MODEL`. Keep the key private and out of Git. See [current API pricing](https://openai.com/api/pricing/) before using paid API access.
 
-## FLOP adapter
+## FLOP status
 
-`src/adapters/flop.js` explicitly reports unavailable and throws on inference. Keep it disabled until official Testnet documentation publishes verified network details, authentication, request formats, and agent onboarding.
+Official FLOP docs currently mark Testnet unreleased and list no verified public RPC, gateway, model catalog, or network identity. Devnet is separate and earns no rewards. Keep `src/adapters/flop.js` disabled until official Testnet details are published. See the [Testnet status](https://docs.flop.network/networks/testnet), [official links](https://docs.flop.network/docs/official-links), [technology FAQ](https://docs.flop.network/docs/technology-and-chain), and [Yellow Paper](https://github.com/flop-labs/yellowpaper).
+
+## Configuration and safety
+
+Copy `.env.example` to `.env` to customize the provider or model. By default `AI_PROVIDER=ollama`, `OLLAMA_BASE_URL=http://localhost:11434/v1`, and `OLLAMA_MODEL=llama3.2:1b`. The `.env` file is ignored by Git. Never add API keys to source code or commit them.
+
+The configured DID `did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h` is public identity text, not a signing key. This project never requests or stores private seeds, recovery phrases, or signing secrets.
 
 ## Validate
 
-Run `npm test` and `npm run status`. The tests use a mocked OpenAI response and do not contact the API.
+Run `npm test` and `npm run status`. Tests use mocked model responses and do not contact OpenAI or Ollama.
 
 ## Repository layout
 
-This project is in `agent-starter/` in [segzyowy/flop-ai-assistant](https://github.com/segzyowy/flop-ai-assistant). The repository's original project remains at the root. To publish this starter separately, create an empty repository, copy this folder's contents into it, then run `git add .`, `git commit`, and `git push`.
+This project is in `agent-starter/` in [segzyowy/flop-ai-assistant](https://github.com/segzyowy/flop-ai-assistant). The repository's original project remains at the root.
