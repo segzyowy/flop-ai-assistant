@@ -60,3 +60,12 @@ Do not commit `.env` files or secrets.
 - Netlify Git deployment: https://www.netlify.com/knowledge-base/how-to-deploy-a-site-to-netlify/
 
 The project does not claim that testnet usage guarantees rewards or airdrop eligibility.
+
+
+## Important: gateway chat is not proof of personal agent rewards
+
+The hosted `@flop-labs/client` gateway is suitable for ordinary chat when a valid `FLOP_API_KEY` is available. However, do not assume that gateway-routed inference is attributed to the enrolled end-user wallet for agent airdrop scoring. FLOP's published Yellow Paper discussion and observed Devnet channel data raise an unresolved attribution issue: gateway-opened compute channels may record the gateway account as the channel agent.
+
+For wallet-attributable compute, the intended direction is a direct compute-channel session signed and funded by the agent's own account, using the official `@flop-labs/sdk` `runDirectSession` flow and a miner endpoint that is explicitly reachable and opted in. This requires a verified miner address, endpoint, model identity, compatible SDK/runtime, and supported network profile. Do not substitute a public model catalogue entry for proof that a miner is reachable.
+
+As of this draft, the application does not claim to perform direct sessions, settled on-chain inference, wallet-attributed spend, or airdrop qualification. Keep the current gateway chat feature separate from any future direct-session feature. Add the direct-session integration only after FLOP publishes and confirms the relevant Testnet onboarding, miner discovery, identity, and settlement requirements.
