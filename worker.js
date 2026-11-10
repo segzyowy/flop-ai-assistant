@@ -35,6 +35,28 @@ export default {
   }
 };
 
+function extractReply(result) {
+  const candidates = [
+    result,
+    result?.response,
+    result?.choices?.[0]?.message?.content,
+    result?.result?.response,
+    result?.result?.choices?.[0]?.message?.content,
+    result?.content
+  ];
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) return candidate;
+    if (Array.isArray(candidate)) {
+      const text = candidate
+        .map((part) => typeof part === "string" ? part : part?.text)
+        .filter((part) => typeof part === "string")
+        .join("");
+      if (text.trim()) return text;
+    }
+  }
+  return "";
+}
+
 async function handleChat(request, env) {
   if (request.method !== "POST") {
     return json({ error: "Use POST to send a chat message." }, 405);
@@ -93,10 +115,13 @@ async function handleChat(request, env) {
         },
         ...messages.map(({ role, content }) => ({ role, content: content.trim() }))
       ],
+      chat_template_kwargs: {
+        enable_thinking: false
+      },
       max_tokens: 512
     });
 
-    const reply = typeof result === "string" ? result : result?.response;
+    const reply = extractReply(result);
     if (typeof reply !== "string" || !reply.trim()) {
       return json({ error: "The AI model returned an empty reply. Please try again." }, 502);
     }
