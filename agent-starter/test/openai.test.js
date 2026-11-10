@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createOpenAIAdapter} from '../src/adapters/openai.js';
+import {createOllamaAdapter} from '../src/adapters/ollama.js';
 
 test('OpenAI adapter sends a Responses API request and keeps session context locally',async()=>{
   const calls=[];
@@ -24,4 +25,13 @@ test('OpenAI adapter does not make a request without a key',async()=>{
 test('OpenAI adapter explains a depleted API credit balance',async()=>{
   const adapter=createOpenAIAdapter({openaiApiKey:'test-key',openaiModel:'gpt-test'},async()=>({ok:false,status:429,json:async()=>({error:{code:'credit_balance_exhausted'}})}));
   assert.match(await adapter.respond('hello'),/credits are exhausted/);
+});
+
+test('local Ollama adapter uses the local server without sending an API key',async()=>{
+  let call;
+  const adapter=createOllamaAdapter({ollamaBaseUrl:'http://localhost:11434/v1',ollamaModel:'llama3.2:1b'},async(url,options)=>{call={url,options,body:JSON.parse(options.body)};return{ok:true,status:200,json:async()=>({choices:[{message:{content:'local reply'}}]})};});
+  assert.equal(await adapter.respond('hello'),'local reply');
+  assert.equal(call.url,'http://localhost:11434/v1/chat/completions');
+  assert.equal(call.options.headers.Authorization,undefined);
+  assert.equal(call.body.model,'llama3.2:1b');
 });
