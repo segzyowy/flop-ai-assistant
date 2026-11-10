@@ -27,9 +27,28 @@ export default {
       });
     }
     if (url.pathname === "/api/chat") return handleChat(request, env);
-    return env.ASSETS.fetch(request);
+    return serveAssets(request, env);
   }
 };
+
+async function serveAssets(request, env) {
+  const response = await env.ASSETS.fetch(request);
+  const url = new URL(request.url);
+  if (!env.FLOP_API_KEY || url.pathname !== "/" ||
+      !response.headers.get("content-type")?.includes("text/html")) return response;
+
+  const page = await response.text();
+  const statusScript = `<script>(()=>{const label=document.getElementById("connectionLabel");const text=document.getElementById("connectionText");const pill=document.querySelector(".pill");if(label)label.textContent="FLOP DevNet configured · development only";if(text)text.textContent="Chat requests are routed through FLOP DevNet when the gateway key and model are accepted. DevNet is separate from Testnet and does not earn rewards.";if(pill)pill.textContent="FLOP DevNet · development network";})();</script>`;
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  headers.delete("content-encoding");
+  headers.delete("etag");
+  return new Response(page.replace("</body>", statusScript + "</body>"), {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
 
 function extractReply(result) {
   const candidates = [result, result?.response, result?.choices?.[0]?.message?.content,
