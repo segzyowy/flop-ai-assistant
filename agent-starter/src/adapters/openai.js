@@ -18,7 +18,15 @@ export function createOpenAIAdapter(config,request=fetch){
       try{result=await response.json();}catch{return'OpenAI returned an unreadable response. Please try again.';}
       if(!response.ok){
         if(response.status===401)return'OpenAI rejected the API key. Check OPENAI_API_KEY in your local .env file.';
-        if(response.status===429)return'OpenAI reports a usage limit or rate limit. Check your API project access and try again.';
+        if(response.status===429){
+          const code=result?.error?.code??result?.error?.type??'';
+          if(code==='credit_balance_exhausted')return'OpenAI API credits are exhausted. Check Billing in your API account; adding credits may incur charges.';
+          if(code==='project_spend_limit_exceeded')return'Your OpenAI project spend limit has been reached. Check the project Limits settings.';
+          if(code==='organization_spend_limit_exceeded')return'Your OpenAI organization spend limit has been reached. Check organization Limits settings.';
+          if(code==='organization_usage_limit_exceeded')return'Your OpenAI organization usage limit has been reached. Check the API account limits or contact its owner.';
+          if(code==='rate_limit_exceeded'||code==='rate_limit_error'||code==='slow_down')return'OpenAI rate limit reached. Wait a little, then try again.';
+          return`OpenAI returned a usage or rate limit (HTTP 429${code?`, ${code}`:''}). Check API Billing, Usage, and project limits.`;
+        }
         return`OpenAI request failed (HTTP ${response.status}). Check the model name in OPENAI_MODEL and your API access.`;
       }
       const answer=typeof result.output_text==='string'?result.output_text.trim():'';
