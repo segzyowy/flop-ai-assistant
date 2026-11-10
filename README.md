@@ -9,17 +9,19 @@ This repository contains two separate projects:
 
 The website's Worker uses the official `@flop-labs/client` package to route chat to the FLOP DevNet gateway when the Cloudflare Worker secret `FLOP_API_KEY` is configured. The optional `FLOP_MODEL_ID` Worker variable selects a model; if it is blank, the Worker discovers one from FLOP's model list. Without `FLOP_API_KEY`, the website continues to use Cloudflare Workers AI as a fallback.
 
-The FLOP gateway's model list is public, but FLOP's docs say chat completions require an API key. The public docs do not describe a self-service process for issuing one. Do not paste a key into chat or commit it to GitHub. Set it only as a Cloudflare Worker **Secret**:
+The official FLOP gateway documents a DevNet wallet-enrollment flow that returns a model-scoped API key. It requires signing a one-time challenge with a wallet locally and a finalized free balance (default minimum 1 FLOP, according to the API spec). The documented default allowance is 25 FLOP, limited to 2 requests per minute and expiring within 24 hours. These are DevNet values, not Testnet rewards or real FLOP tokens. Never send a wallet seed or signature secret to this repository, Cloudflare, or chat. Keep the signing step on your own device; only the returned gateway key belongs in the Cloudflare secret.
+
+To configure the website after you have a FLOP gateway key:
 
 1. In Cloudflare, open **Workers & Pages** and select `flop-ai-assistant`.
 2. Open **Settings** → **Variables and Secrets** → **Add**.
-3. Choose **Secret**, set the name to `FLOP_API_KEY`, and paste your key privately.
+3. Choose **Secret**, set the name to `FLOP_API_KEY`, and paste the gateway key privately.
 4. Select **Deploy**.
-5. Open `/api/status` on your site to see which provider is configured. A configured key is not itself proof every model request will succeed.
+5. Open `/api/status` on your site to see which provider is configured. A configured key is not proof every model request will succeed.
 
 If you have an official model ID, you can optionally add `FLOP_MODEL_ID` as a plain-text Worker variable. Otherwise the Worker selects the first model in the official gateway catalog.
 
-FLOP DevNet is a development network, separate from Testnet. Do not assume DevNet activity earns rewards or airdrop weight. The official docs list the public gateway at `https://api.flop.network/v1`, and the current network page still lists Testnet as unreleased. See [FLOP SDK references](https://docs.flop.network/docs/sdk-references), [FLOP DevNet and Testnet FAQ](https://docs.flop.network/docs/testnet-and-timeline), and [Testnet status](https://docs.flop.network/networks/testnet).
+FLOP DevNet is a development network, separate from Testnet. Do not assume DevNet activity earns rewards or airdrop weight. The official docs list the public gateway at `https://api.flop.network/v1`, and the current network page still lists Testnet as unreleased. See [FLOP SDK references](https://docs.flop.network/docs/sdk-references), [FLOP gateway OpenAPI](https://api.flop.network/openapi.json), [FLOP DevNet and Testnet FAQ](https://docs.flop.network/docs/testnet-and-timeline), and [Testnet status](https://docs.flop.network/networks/testnet).
 
 When no FLOP key is configured, the fallback uses Google Gemma 4 through Cloudflare Workers AI. Cloudflare currently provides 10,000 Neurons per day at no charge on the Workers Free plan. This is a daily allowance, not unlimited use. If the allowance is exhausted on the Free plan, further AI requests fail until it resets. See [Cloudflare Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/).
 
