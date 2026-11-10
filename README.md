@@ -2,16 +2,26 @@
 
 This repository contains two separate projects:
 
-- **Website (repository root and `public/`)** — a chat website deployed as a Cloudflare Worker. Chat replies use Cloudflare Workers AI.
+- **Website (repository root and `public/`)** — a chat website deployed as a Cloudflare Worker.
 - **Local agent (`agent-starter/`)** — a Node.js agent that can use Ollama on your own computer.
 
 ## Website and AI backend
 
-The Cloudflare Worker serves the website from `public/index.html` and handles chat requests at `/api/chat`. It calls the Cloudflare Workers AI binding directly; no OpenAI key, FLOP API key, or other API secret is needed.
+The website's Worker uses the official `@flop-labs/client` package to route chat to the FLOP DevNet gateway when the Cloudflare Worker secret `FLOP_API_KEY` is configured. The optional `FLOP_MODEL_ID` Worker variable selects a model; if it is blank, the Worker discovers one from FLOP's model list. Without `FLOP_API_KEY`, the website continues to use Cloudflare Workers AI as a fallback.
 
-The selected model is Google Gemma 4 through Cloudflare Workers AI. Cloudflare currently provides 10,000 Neurons per day at no charge on the Workers Free plan. This is a daily allowance, not unlimited use. If the allowance is exhausted on the Free plan, further AI requests fail until it resets. No paid upgrade is configured by this project. See [Cloudflare Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/).
+The FLOP gateway's model list is public, but FLOP's docs say chat completions require an API key. The public docs do not describe a self-service process for issuing one. Do not paste a key into chat or commit it to GitHub. Set it only as a Cloudflare Worker **Secret**:
 
-Cloudflare AI is separate from the FLOP network. The website does not send requests to FLOP, and does not claim FLOP Testnet connectivity, rewards, or airdrop eligibility. The official FLOP Testnet documentation currently reports the public Testnet as unreleased and lists no verified public RPC or gateway: [official FLOP Testnet status](https://docs.flop.network/networks/testnet).
+1. In Cloudflare, open **Workers & Pages** and select `flop-ai-assistant`.
+2. Open **Settings** → **Variables and Secrets** → **Add**.
+3. Choose **Secret**, set the name to `FLOP_API_KEY`, and paste your key privately.
+4. Select **Deploy**.
+5. Open `/api/status` on your site to see which provider is configured. A configured key is not itself proof every model request will succeed.
+
+If you have an official model ID, you can optionally add `FLOP_MODEL_ID` as a plain-text Worker variable. Otherwise the Worker selects the first model in the official gateway catalog.
+
+FLOP DevNet is a development network, separate from Testnet. Do not assume DevNet activity earns rewards or airdrop weight. The official docs list the public gateway at `https://api.flop.network/v1`, and the current network page still lists Testnet as unreleased. See [FLOP SDK references](https://docs.flop.network/docs/sdk-references), [FLOP DevNet and Testnet FAQ](https://docs.flop.network/docs/testnet-and-timeline), and [Testnet status](https://docs.flop.network/networks/testnet).
+
+When no FLOP key is configured, the fallback uses Google Gemma 4 through Cloudflare Workers AI. Cloudflare currently provides 10,000 Neurons per day at no charge on the Workers Free plan. This is a daily allowance, not unlimited use. If the allowance is exhausted on the Free plan, further AI requests fail until it resets. See [Cloudflare Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/).
 
 ## Deploy on Cloudflare
 
@@ -22,7 +32,7 @@ This repository is connected to Cloudflare Workers Builds:
 - Deploy command: `npx wrangler deploy`
 - Wrangler configuration: `wrangler.jsonc`
 
-After a change reaches `main`, check the Cloudflare Worker’s **Deployments** tab. The Worker configuration declares both the static asset binding and the Workers AI binding. If Cloudflare reports that the AI binding is missing, open the Worker’s **Settings** and add a Workers AI binding named `AI`, then redeploy.
+After a change reaches `main`, check the Cloudflare Worker’s **Deployments** tab. The Worker configuration declares both the static asset binding and the Workers AI binding. The FLOP API key must be added separately as a Cloudflare secret; it is never stored in this repository.
 
 The public site URL is shown on the Worker’s **Overview** page under **Visit** or **Domains**.
 
@@ -53,4 +63,4 @@ The configured DID is public identity text: `did:key:z6MkooHatvhcHQjgQ62MyUoLe1T
 
 ## Local FLOP status
 
-FLOP network functionality remains disabled until official public Testnet connection details are verified. DevNet is separate from Testnet. Check the [official Testnet status](https://docs.flop.network/networks/testnet) before enabling any network adapter.
+The local Ollama agent still has its own FLOP network adapter disabled. The website's FLOP client integration is a separate code path, configured by the Cloudflare Worker secret described above. DevNet is not Testnet.
