@@ -1,62 +1,56 @@
 # FLOP AI Assistant
 
-A responsive AI chat website with conversation history and a Netlify Function that calls the official FLOP inference gateway using `@flop-labs/client`.
+This repository contains two separate projects:
 
-## Important status
+- **Website (repository root and `public/`)** — a chat website deployed as a Cloudflare Worker. Chat replies use Cloudflare Workers AI.
+- **Local agent (`agent-starter/`)** — a Node.js agent that can use Ollama on your own computer.
 
-The website and serverless integration are prepared, but live AI responses require a valid `FLOP_API_KEY` issued through FLOP's official developer process. Do not put the key in `index.html`, GitHub, or `netlify.toml`.
+## Website and AI backend
 
-This project uses the published package `@flop-labs/client@0.2.1` and the default gateway documented by FLOP: `https://api.flop.network/v1`. It discovers the first available model with `listModels()` unless you set `FLOP_MODEL`.
+The Cloudflare Worker serves the website from `public/index.html` and handles chat requests at `/api/chat`. It calls the Cloudflare Workers AI binding directly; no OpenAI key, FLOP API key, or other API secret is needed.
 
-## Files
+The selected model is Google Gemma 4 through Cloudflare Workers AI. Cloudflare currently provides 10,000 Neurons per day at no charge on the Workers Free plan. This is a daily allowance, not unlimited use. If the allowance is exhausted on the Free plan, further AI requests fail until it resets. No paid upgrade is configured by this project. See [Cloudflare Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/).
 
-- `index.html` — responsive chat interface.
-- `netlify/functions/chat.mjs` — server-side FLOP inference endpoint.
-- `netlify.toml` — Netlify build and function configuration.
-- `package.json` — pinned FLOP client dependency.
+Cloudflare AI is separate from the FLOP network. The website does not send requests to FLOP, and does not claim FLOP Testnet connectivity, rewards, or airdrop eligibility. The official FLOP Testnet documentation currently reports the public Testnet as unreleased and lists no verified public RPC or gateway: [official FLOP Testnet status](https://docs.flop.network/networks/testnet).
 
-## Deploy with GitHub + Netlify
+## Deploy on Cloudflare
 
-1. Create a new **public or private** GitHub repository named `flop-ai-assistant`.
-2. Upload all files and folders from this project. Keep `netlify/functions/chat.mjs` in that exact path.
-3. Open https://app.netlify.com and choose **Add new project → Import an existing project**.
-4. Connect GitHub, select `flop-ai-assistant`, and deploy. Netlify reads `netlify.toml`; no build command is required.
-5. In Netlify, open **Project configuration → Environment variables** and add:
-   - Key: `FLOP_API_KEY`
-   - Value: your FLOP-issued API key
-6. Optional: add `FLOP_MODEL` with a model ID returned by FLOP's `/v1/models` endpoint. If omitted, the function selects the first listed model.
-7. Trigger a new deploy after adding/changing environment variables.
-8. Open the Netlify site URL and send a test message.
+This repository is connected to Cloudflare Workers Builds:
 
-## Local preview
+- Production branch: `main`
+- Build command: `exit 0`
+- Deploy command: `npx wrangler deploy`
+- Wrangler configuration: `wrangler.jsonc`
 
-Requires Node.js 22+.
+After a change reaches `main`, check the Cloudflare Worker’s **Deployments** tab. The Worker configuration declares both the static asset binding and the Workers AI binding. If Cloudflare reports that the AI binding is missing, open the Worker’s **Settings** and add a Workers AI binding named `AI`, then redeploy.
 
-```bash
-npm install
-npx netlify-cli dev
-```
+The public site URL is shown on the Worker’s **Overview** page under **Visit** or **Domains**.
 
-Add `FLOP_API_KEY` to your local shell environment before running Netlify Dev. For example in macOS/Linux:
+## Run the local agent
 
-```bash
-export FLOP_API_KEY="your-issued-key"
-npx netlify-cli dev
-```
+The website and local agent are separate. The local agent uses Ollama on the computer where it is run:
 
-Do not commit `.env` files or secrets.
+1. Install [Ollama](https://ollama.com/download/windows) and open the Ollama app.
+2. In PowerShell, download the model once:
 
-## Troubleshooting
+   ```powershell
+   ollama pull llama3.2:1b
+   ```
 
-- **503 FLOP AI is not connected yet:** set `FLOP_API_KEY` in Netlify environment variables and redeploy.
-- **401/403 from FLOP:** key may be invalid, inactive, or not entitled to the gateway.
-- **No available models:** check the FLOP gateway and model availability.
-- **Function not found:** confirm `netlify/functions/chat.mjs` is in the repository and the Netlify deploy completed.
+3. From the `agent-starter` folder:
 
-## Official references
+   ```powershell
+   git pull
+   npm test
+   npm start
+   ```
 
-- FLOP SDK reference: https://docs.flop.network/docs/sdk-references
-- Netlify Functions configuration: https://docs.netlify.com/build/functions/configuration/
-- Netlify Git deployment: https://www.netlify.com/knowledge-base/how-to-deploy-a-site-to-netlify/
+The local agent connects to Ollama at `http://localhost:11434/v1`. It does not require an OpenAI API key. Local notes are stored in ignored `agent-starter/data/`.
 
-The project does not claim that testnet usage guarantees rewards or airdrop eligibility.
+## Identity and secrets
+
+The configured DID is public identity text: `did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h`. This project never asks for or stores its private seed, a recovery phrase, or signing secrets. Do not commit API keys or credentials.
+
+## Local FLOP status
+
+FLOP network functionality remains disabled until official public Testnet connection details are verified. DevNet is separate from Testnet. Check the [official Testnet status](https://docs.flop.network/networks/testnet) before enabling any network adapter.
