@@ -1,0 +1,2 @@
+import {tools} from './tools.js';
+export function createAgent({config,memory}){const registry=new Map(tools.map(t=>[t.name,t]));return{async respond(input){const text=input.trim();if(!text)return'Type help to see what I can do.';const tool=registry.get(text.split(/\s+/,1)[0].toLowerCase());return tool?tool.run({config,memory,input:text}):'I’m a local starter agent. Try help, status, remember <text>, or recall.';}};}
