@@ -9,5 +9,8 @@
   },
   "ai": {
     "binding": "AI"
+  },
+  "vars": {
+    "FLOP_MODEL_ID": "qwen/qwen2.5-0.5b-instruct"
   }
 }
