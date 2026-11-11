@@ -111,8 +111,27 @@ async function handleChat(request, env) {
 
   if (env.FLOP_API_KEY) {
     try { return await runFlopChat(messages, env); }
-    catch {
-      return json({ error: "FLOP DevNet could not complete this request. Check that the gateway API key is valid and that the selected model is available." }, 502);
+    catch (error) {
+      const upstreamStatus = Number(error?.status);
+      let message = "The FLOP gateway request failed.";
+      if (upstreamStatus === 401 || upstreamStatus === 403) {
+        message = `FLOP rejected the gateway key or its access (HTTP ${upstreamStatus}).`;
+      } else if (upstreamStatus === 400 || upstreamStatus === 404) {
+        message = `FLOP rejected the selected model or request (HTTP ${upstreamStatus}).`;
+      } else if (upstreamStatus === 429 || upstreamStatus === 503) {
+        message = `FLOP is rate-limited or temporarily unavailable (HTTP ${upstreamStatus}).`;
+      } else if (Number.isInteger(upstreamStatus) && upstreamStatus >= 400) {
+        message = `FLOP returned an HTTP ${upstreamStatus} error.`;
+      } else if (Number.isFinite(upstreamStatus) && upstreamStatus > 0) {
+        message = "The FLOP gateway returned an unexpected response.";
+      } else {
+        message = "The website Worker could not reach the FLOP gateway.";
+      }
+      return json({
+        error: message,
+        provider: "FLOP DevNet",
+        ...(Number.isInteger(upstreamStatus) && upstreamStatus > 0 ? { upstreamStatus } : {})
+      }, 502);
     }
   }
 
