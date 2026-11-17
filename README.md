@@ -2,12 +2,12 @@
 
 This repository contains two separate projects:
 
-- **Website (repository root and `public/`)** — a chat website deployed as a Cloudflare Worker.
+- **Website (`public/` and `api/`)** — a chat site that can deploy on Cloudflare Workers or Vercel.
 - **Local agent (`agent-starter/`)** — a Node.js agent that can use Ollama on your own computer.
 
 ## Website and AI backend
 
-The website's Worker uses the official `@flop-labs/client` package to route chat to the FLOP DevNet gateway when the Cloudflare Worker secret `FLOP_API_KEY` is configured. The optional `FLOP_MODEL_ID` Worker variable selects a model; if it is blank, the Worker discovers one from FLOP's model list. Without `FLOP_API_KEY`, the website continues to use Cloudflare Workers AI as a fallback.
+The Cloudflare Worker and Vercel Node.js Functions use the official `@flop-labs/client` package to route chat to the FLOP DevNet gateway when `FLOP_API_KEY` is configured. `FLOP_MODEL_ID` selects a model; when blank, the backend discovers one from FLOP's model list. Cloudflare can use Workers AI as its fallback. Vercel has no Cloudflare AI binding, so on Vercel chat requires `FLOP_API_KEY`; without it the API returns a setup message. Technocore DID check-ins work separately on both platforms.
 
 The official FLOP gateway documents a DevNet wallet-enrollment flow that returns a model-scoped API key. It requires signing a one-time challenge with a wallet locally and a finalized free balance (default minimum 1 FLOP, according to the API spec). The documented default allowance is 25 FLOP, limited to 2 requests per minute and expiring within 24 hours. These are DevNet values, not Testnet rewards or real FLOP tokens. Never send a wallet seed or signature secret to this repository, Cloudflare, or chat. Keep the signing step on your own device; only the returned gateway key belongs in the Cloudflare secret.
 
@@ -38,6 +38,18 @@ After a change reaches `main`, check the Cloudflare Worker’s **Deployments** t
 
 The public site URL is shown on the Worker’s **Overview** page under **Visit** or **Domains**.
 
+## Deploy on Vercel
+
+This repository includes Vercel Node.js Functions under `api/` and a `vercel.json` that serves the site from `public/`. The original Cloudflare Worker deployment remains available.
+
+1. In Vercel, choose **Add New → Project** and import `segzyowy/flop-ai-assistant`.
+2. Keep the **Root Directory** as `./`. Use the **Other** framework preset and leave the Build Command blank. The included config selects `public` as the static output directory.
+3. In Vercel **Settings → Environment Variables**, add `FLOP_API_KEY` as a secret for Production and Preview. If you have a valid model-scoped gateway key, optionally add `FLOP_MODEL_ID` with its model ID (for example `qwen/qwen2.5-0.5b-instruct`).
+4. Deploy. If you add or change environment variables later, redeploy so the new deployment receives them.
+5. Open `/api/status` on the Vercel site. It should say `FLOP DevNet` when the variable is present. This confirms configuration, not that each inference request will succeed.
+
+Do not put a gateway key in GitHub, frontend code, chat, or a public build variable. If you previously pasted a key into a chat, revoke it and add a replacement only in Vercel's Environment Variables. Without a key, the Vercel chat endpoint will show how to configure the provider; Technocore identity check-ins remain separate.
+
 ## Run the local agent
 
 The website and local agent are separate. The local agent uses Ollama on the computer where it is run:
@@ -61,7 +73,7 @@ The local agent connects to Ollama at `http://localhost:11434/v1`. It does not r
 
 ## Technocore DID check-in
 
-The website includes an optional signed check-in to Technocore's public `lobby`. It follows Technocore's documented Ed25519 `did:key` message format. The browser asks an installed Polkadot-compatible wallet extension to sign the exact public message; the signing seed stays inside the wallet. The Worker only forwards the DID, message, nonce, and public signature. It never receives a seed.
+The website includes an optional signed check-in to Technocore's public `lobby`. It follows Technocore's documented Ed25519 `did:key` message format. The browser asks an installed Polkadot-compatible wallet extension to sign the exact public message; the signing seed stays inside the wallet. The backend only forwards the DID, message, nonce, and public signature. It never receives a seed.
 
 To use it, open the website, choose **Connect DID wallet**, approve access, review the public text, then choose **Sign & post** and approve the wallet's signature prompt. The extension must contain the account whose public address matches the configured DID. If no matching wallet account appears, the app does not ask for or accept the seed as a fallback.
 
