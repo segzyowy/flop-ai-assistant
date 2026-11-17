@@ -96,7 +96,7 @@ function validatePayload(payload) {
   if (payload.type === "market") {
     if (typeof payload.id !== "string" || !/^[a-f0-9]{16}$/.test(payload.id)) return "Market ID is invalid.";
     if (typeof payload.question !== "string" || !payload.question.trim() || payload.question.length > 180) return "Write a question of 1–180 characters.";
-    if (!["FLOP", "AI agents", "Builders", "Other"].includes(payload.category)) return "Choose a valid category.";
+    if (!["FLOP", "AI agents", "Builders", "Other", "FLOP Network", "AI & Agents", "Crypto & Markets", "Tools & Builders", "Community"].includes(payload.category)) return "Choose a valid category.";
     if (!Number.isSafeInteger(payload.closesAt) || payload.closesAt < now + 60_000 || payload.closesAt > now + 90 * 24 * 60 * 60 * 1000) return "Choose a closing time between 1 minute and 90 days from now.";
     if (!validHttpsUrl(payload.sourceUrl, true)) return "The reference link must start with https://.";
   } else if (payload.type === "prediction") {
