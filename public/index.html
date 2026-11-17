@@ -42,13 +42,13 @@
     <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/><path d="m18.5 2 .8 2.7L22 5.5l-2.7.8-.8 2.7-.8-2.7-2.7-.8 2.7-.8.8-2.7Z" fill="white"/></svg></div><div><div class="brand-name">FLOP AI</div><div class="brand-sub">INTELLIGENCE ASSISTANT</div></div></div>
     <button class="new-chat" id="newChat"><span>＋</span> New conversation</button>
     <div class="side-label">Recent conversations</div><div class="history" id="history"><div style="padding:10px;color:#6f7891;font-size:12px">Your chats appear here.</div></div>
-    <div class="side-bottom"><div class="network-card"><div class="network-top"><span class="dot"></span><span id="connectionLabel">Cloudflare AI ready · FLOP offline</span></div><p id="connectionText">Chat replies use Cloudflare Workers AI. This app is not connected to FLOP Testnet.</p></div></div>
+    <div class="side-bottom"><div class="network-card"><div class="network-top"><span class="dot"></span><span id="connectionLabel">Checking AI provider…</span></div><p id="connectionText">Checking the configured AI provider.</p></div></div>
   </aside>
   <main>
     <header class="topbar">
       <div class="mobile-brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/></svg></div>FLOP AI Assistant</div>
       <div class="top-title">Your intelligent workspace</div>
-      <div class="top-right"><div class="pill"><span class="tiny"></span> Cloudflare Workers AI · daily free allowance</div></div>
+      <div class="top-right"><div class="pill"><span class="tiny"></span> Checking AI provider…</div></div>
     </header>
     <section class="identity-panel" aria-label="Technocore DID connection">
       <div>
@@ -112,10 +112,14 @@
       if (pill) pill.textContent = 'FLOP DevNet · development only';
       if (label) label.textContent = 'FLOP DevNet gateway configured';
       if (copy) copy.textContent = 'AI chat uses the FLOP DevNet gateway when its key and model are accepted. This is not Testnet.';
-    } else {
+    } else if (data.provider === 'Cloudflare Workers AI') {
       if (pill) pill.textContent = 'Cloudflare Workers AI · daily free allowance';
       if (label) label.textContent = 'Cloudflare AI ready · FLOP gateway not configured';
       if (copy) copy.textContent = 'AI chat uses Cloudflare Workers AI. Technocore DID check-ins below are a separate public service.';
+    } else {
+      if (pill) pill.textContent = 'FLOP gateway key required';
+      if (label) label.textContent = 'No AI provider configured';
+      if (copy) copy.textContent = 'Set FLOP_API_KEY in this Vercel project’s Environment Variables, then redeploy. Technocore DID check-ins work separately.';
     }
   }).catch(() => {});
   connectWalletBtn.addEventListener('click', async () => {
