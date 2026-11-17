@@ -26,28 +26,89 @@ export default {
         network: "development"
       });
     }
+    if (url.pathname === "/api/technocore/status") return handleTechnocoreStatus(request);
+    if (url.pathname === "/api/technocore/post") return handleTechnocorePost(request, url);
     if (url.pathname === "/api/chat") return handleChat(request, env);
     return serveAssets(request, env);
   }
 };
 
 async function serveAssets(request, env) {
-  const response = await env.ASSETS.fetch(request);
-  const url = new URL(request.url);
-  if (!env.FLOP_API_KEY || url.pathname !== "/" ||
-      !response.headers.get("content-type")?.includes("text/html")) return response;
+  return env.ASSETS.fetch(request);
+}
 
-  const page = await response.text();
-  const statusScript = `<script>(()=>{const label=document.getElementById("connectionLabel");const text=document.getElementById("connectionText");const pill=document.querySelector(".pill");if(label)label.textContent="FLOP DevNet configured · development only";if(text)text.textContent="Chat requests are routed through FLOP DevNet when the gateway key and model are accepted. DevNet is separate from Testnet and does not earn rewards.";if(pill)pill.textContent="FLOP DevNet · development network";})();</script>`;
-  const headers = new Headers(response.headers);
-  headers.delete("content-length");
-  headers.delete("content-encoding");
-  headers.delete("etag");
-  return new Response(page.replace("</body>", statusScript + "</body>"), {
-    status: response.status,
-    statusText: response.statusText,
-    headers
-  });
+async function handleTechnocoreStatus(request) {
+  if (request.method !== "GET") return json({ error: "Use GET to check Technocore status." }, 405);
+  try {
+    const response = await fetch("https://technocore.chat/.well-known/agent.json", {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(8000)
+    });
+    return json({
+      available: response.ok,
+      service: "Technocore",
+      message: response.ok
+        ? "Technocore is reachable. Connect the wallet for this DID and sign a public lobby check-in."
+        : "Technocore did not respond successfully. Try again later."
+    }, response.ok ? 200 : 503);
+  } catch {
+    return json({ available: false, service: "Technocore", message: "Technocore could not be reached right now." }, 503);
+  }
+}
+
+async function handleTechnocorePost(request, url) {
+  if (request.method !== "POST") return json({ error: "Use POST to publish a signed check-in." }, 405);
+  if (request.headers.get("origin") !== url.origin) return json({ error: "This request must come from this website." }, 403);
+  if (!request.headers.get("content-type")?.toLowerCase().includes("application/json")) {
+    return json({ error: "Send the signed check-in as JSON." }, 415);
+  }
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > 4096) return json({ error: "The check-in request is too large." }, 413);
+
+  let body;
+  try { body = await request.json(); }
+  catch { return json({ error: "The check-in was not valid JSON." }, 400); }
+
+  const did = "did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h";
+  if (typeof body?.did !== "string" || body.did !== did) return json({ error: "The DID does not match this app's configured public identity." }, 400);
+  if (typeof body?.nonce !== "string" || !/^[0-9]{1,19}$/.test(body.nonce)) {
+    return json({ error: "The signature nonce must contain 1–19 digits." }, 400);
+  }
+  if (typeof body?.sig !== "string" || !/^[A-Za-z0-9_-]{85}[AQgw]$/.test(body.sig)) {
+    return json({ error: "The wallet returned a signature in an unsupported format." }, 400);
+  }
+  if (typeof body?.text !== "string" || !body.text.trim() || body.text.length > 240) {
+    return json({ error: "Write a public check-in of 1–240 characters." }, 400);
+  }
+  const swept = body.text.replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Zl}\p{Zp}]/gu, " ").trim();
+  if (swept !== body.text) return json({ error: "The check-in contains hidden or line-break characters. Edit it and sign again." }, 400);
+
+  try {
+    const upstream = await fetch("https://technocore.chat/r/lobby", {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({ did, sig: body.sig, nonce: body.nonce, text: body.text }),
+      signal: AbortSignal.timeout(10000)
+    });
+    if (!upstream.ok) {
+      return json({
+        error: upstream.status === 409
+          ? "Technocore rejected the nonce. Reconnect and sign again."
+          : upstream.status === 422
+            ? "Technocore is filtering duplicate messages. Change the check-in text and sign again."
+            : `Technocore rejected the signed check-in (HTTP ${upstream.status}).`,
+        upstreamStatus: upstream.status
+      }, 502);
+    }
+    return json({
+      ok: true,
+      message: "Technocore accepted the signed public check-in.",
+      room: "lobby",
+      did
+    });
+  } catch {
+    return json({ error: "The site could not reach Technocore. Your wallet signature was not confirmed as posted." }, 502);
+  }
 }
 
 function extractReply(result) {
