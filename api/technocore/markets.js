@@ -196,3 +196,6 @@ export async function postMarketRecord(request) {
     return json({ error: "Could not reach Technocore. The record was not confirmed as posted." }, 502);
   }
 }
+
+export const GET = getMarkets;
+export const POST = postMarketRecord;
