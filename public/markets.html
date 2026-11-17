@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>Community Prediction Market · FLOP AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#11182a;--panel2:#151d32;--line:#29334c;--text:#eef2ff;--muted:#a1abc3;--purple:#a995ff;--cyan:#75d8e8;--green:#80e2bd;--red:#f0a1a8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -10%,#262650 0,transparent 50%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--cyan)}button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:24px 22px 80px}.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}.brand{font-weight:800;letter-spacing:.02em;color:#fff;text-decoration:none}.navlinks{display:flex;gap:16px;align-items:center;color:var(--muted);font-size:13px}.hero{display:grid;grid-template-columns:1fr auto;gap:25px;align-items:end;margin-bottom:25px}.eyebrow{color:var(--purple);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.045em;margin:8px 0 12px}.hero p{color:var(--muted);max-width:700px;margin:0}.status{border:1px solid var(--line);background:#11182acc;border-radius:99px;padding:8px 13px;color:var(--muted);font-size:12px;white-space:nowrap}.status b{color:var(--green)}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:22px 0}.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab,.button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:var(--panel);color:var(--text);font-size:13px}.tab.active{border-color:#7867da;background:#252044;color:#fff}.button.primary{border:0;background:linear-gradient(135deg,#8d75ff,#588bed);font-weight:800}.button:disabled{opacity:.5;cursor:not-allowed}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card,.panel{border:1px solid var(--line);background:linear-gradient(150deg,#131a2d,#101626);border-radius:16px;padding:18px;box-shadow:0 12px 35px #0002}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#c8bcff;border:1px solid #504777;border-radius:99px;padding:4px 8px}.state{font-size:11px;color:var(--green)}.state.closed{color:#e0b8bd}.question{font-size:19px;line-height:1.35;font-weight:750;letter-spacing:-.02em;margin:0 0 8px}.meta{color:var(--muted);font-size:11px}.source{font-size:12px;margin-top:8px}.vote-row{display:flex;gap:8px;margin-top:17px}.vote{flex:1;border:1px solid #39435a;background:#171f32;color:#dfe5f6;border-radius:10px;padding:11px;font-weight:700}.vote.yes:hover,.vote.selected.yes{border-color:#58b994;background:#18362f;color:#abf1d7}.vote.no:hover,.vote.selected.no{border-color:#c77682;background:#3a222e;color:#ffc4c7}.your-pick{margin-top:11px;font-size:12px;color:var(--muted)}.resolution{margin-top:12px;padding:10px;border-radius:10px;background:#182a27;color:var(--green);font-size:12px}.resolve-form{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.resolve-form select,.resolve-form input{min-width:0;flex:1;background:#0d1423;border:1px solid var(--line);border-radius:9px;padding:8px;color:var(--text)}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--line);border-radius:15px}.side-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:15px;margin-top:24px}.panel h2{font-size:16px;margin:0 0 5px}.panel>p{color:var(--muted);font-size:12px;margin:0 0 16px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#b7c0d5}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:#0d1423;color:var(--text);padding:10px 11px;outline:none}.field textarea{min-height:76px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#8170e8}.hint{font-size:10px;color:#8792ac}.form-actions{display:flex;align-items:center;gap:10px;margin-top:13px;flex-wrap:wrap}.message{font-size:11px;color:var(--muted);min-height:16px}.wallet-panel{display:flex;flex-direction:column;gap:10px}.wallet-panel .field{margin-top:2px}.wallet-panel small{color:var(--muted);font-size:11px}.scores{display:flex;flex-direction:column;gap:8px;margin-top:11px}.score{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #202940;padding:8px 0;font-size:12px}.score strong{color:var(--green)}.rules{margin-top:20px;color:#8893ac;font-size:10px;line-height:1.7}.rules a{color:#adb8d2}.bottom{margin-top:18px;display:flex;justify-content:space-between;color:#78849e;font-size:10px;gap:12px;flex-wrap:wrap}
+@media(max-width:780px){.hero{grid-template-columns:1fr}.status{justify-self:start}.grid{grid-template-columns:1fr}.side-grid{grid-template-columns:1fr}.wrap{padding:18px 14px 60px}.nav{margin-bottom:27px}.navlinks{gap:10px}.toolbar{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><a class="brand" href="/">✦ FLOP AI Assistant</a><div class="navlinks"><a href="/">Assistant</a><a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Technocore record ↗</a></div></nav>
+<header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a clear forecast, see how the community is calling it, and build a track record. Predictions are free: no FLOP tokens, payments, or prizes. Signed posts are public on Technocore.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
+<div class="toolbar"><div class="tabs" role="tablist"><button class="tab active" data-filter="open">Open markets</button><button class="tab" data-filter="all">All markets</button><button class="tab" data-filter="resolved">Resolved</button></div><button class="button" id="refresh">Refresh markets ↻</button></div>
+<main class="grid" id="markets"><div class="empty">Loading public markets…</div></main>
+<section class="side-grid">
+<div class="panel"><h2>Create a community question</h2><p>Set a yes/no question with a deadline. The community can change predictions until the market closes.</p>
+<form id="createForm"><div class="form-grid">
+<div class="field full"><label for="question">Question</label><input id="question" maxlength="180" required placeholder="Will FLOP Devnet add public agent session support by…?"></div>
+<div class="field"><label for="category">Category</label><select id="category"><option>FLOP</option><option>AI agents</option><option>Builders</option><option>Other</option></select></div>
+<div class="field"><label for="closesAt">Prediction deadline</label><input id="closesAt" type="datetime-local" required></div>
+<div class="field full"><label for="sourceUrl">Background source (optional)</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
+</div><div class="form-actions"><button class="button primary" id="createButton" type="submit" disabled>Connect wallet to create</button><span class="message" id="createMessage"></span></div></form>
+</div>
+<aside class="panel wallet-panel"><div><h2>Community leaderboard</h2><p>100 points for each correct resolved prediction. Points have no cash or token value.</p><div class="scores" id="scores"><span class="meta">Scores will appear as markets resolve.</span></div></div>
+<div class="field"><label for="did">Your public Ed25519 DID</label><input id="did" spellcheck="false" value="did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h"></div>
+<button class="button" id="connect" type="button">Connect wallet</button>
+<div class="field"><label for="account">Account to sign as</label><select id="account" disabled><option>Connect a Polkadot-compatible wallet</option></select></div>
+<small id="walletMessage">Only your wallet signs. Never enter a seed or private key here. Choose an Ed25519 account that matches the DID above.</small>
+</aside>
+</section>
+<p class="rules">How it works: signed market questions, predictions and results are recorded in Technocore’s public <code>flop-predictions</code> room. Only a market creator may post its result, with an HTTPS evidence link; VOID cancels scoring. The newest retained records are shown. Technocore rooms have bounded retention, so this is a public community record, not permanent archival storage. A DID signature shows control of a key, not a verified real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
+<footer class="bottom"><span>Free community predictions · no wagering or token transfers</span><a href="https://technocore.chat/r/flop-predictions?format=json&limit=200" target="_blank" rel="noreferrer">View raw signed records ↗</a></footer>
+</div>
+<script>
+(() => {
+  const ROOM = "flop-predictions";
+  let records = [];
+  let filter = "open";
+  let signer = null;
+  let accountList = [];
+  const marketEl = document.getElementById("markets");
+  const statusEl = document.getElementById("connection");
+  const didEl = document.getElementById("did");
+  const accountEl = document.getElementById("account");
+  const connectBtn = document.getElementById("connect");
+  const createBtn = document.getElementById("createButton");
+  const walletMessage = document.getElementById("walletMessage");
+  const clean = s => String(s ?? "").replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Zl}\p{Zp}]/gu, " ").trim();
+  const getMarket = id => records.find(r => r.payload.type === "market" && r.payload.id === id);
+  const getPredictions = id => records.filter(r => r.payload.type === "prediction" && r.payload.marketId === id);
+  const getResolution = id => records.find(r => r.payload.type === "resolution" && r.payload.marketId === id);
+  const didKey = () => clean(didEl.value);
+  function connected() { return Boolean(signer && accountEl.value && didKey()); }
+  function updateWalletControls() {
+    createBtn.disabled = !connected();
+    createBtn.textContent = connected() ? "Sign & publish question" : "Connect wallet to create";
+    document.querySelectorAll("[data-vote]").forEach(button => button.disabled = !connected());
+  }
+  function encodeBase64Url(hex) {
+    const bytes = Uint8Array.from(hex.slice(2).match(/.{2}/g) || [], p => parseInt(p, 16));
+    let binary = "";
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  async function postRecord(payload, messageEl, button) {
+    if (!connected()) throw new Error("Connect a matching wallet first.");
+    if (button) button.disabled = true;
+    const text = JSON.stringify(payload);
+    const storageKey = "technocore-market-nonce-" + didKey();
+    let previous = 0;
+    try { previous = Number(localStorage.getItem(storageKey) || 0); } catch {}
+    const nonce = String(Math.max(Date.now(), Number.isSafeInteger(previous) ? previous + 1 : 0));
+    const bytes = new TextEncoder().encode(ROOM + "|" + nonce + "|" + text);
+    let hex = "0x";
+    for (const byte of bytes) hex += byte.toString(16).padStart(2, "0");
+    const account = accountList.find(item => item.address === accountEl.value);
+    const signed = await signer.signRaw({ address: account.address, data: hex, type: "bytes" });
+    const signature = encodeBase64Url(signed?.signature || "");
+    if (!/^[A-Za-z0-9_-]{85}[AQgw]$/.test(signature)) throw new Error("The wallet returned an unsupported signature. Use the Ed25519 account matching your DID.");
+    const response = await fetch("/api/technocore/markets", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ did: didKey(), nonce, sig: signature, text })
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Technocore did not accept the signed record.");
+    try { localStorage.setItem(storageKey, nonce); } catch {}
+    if (messageEl) messageEl.textContent = "Signed and recorded on Technocore.";
+    await loadMarkets();
+  }
+  function notify(messageEl, text, error = false) {
+    if (!messageEl) return;
+    messageEl.textContent = text;
+    messageEl.style.color = error ? "#f0a1a8" : "#80e2bd";
+  }
+  function safeLink(url, label) {
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol !== "https:") return null;
+      const a = document.createElement("a");
+      a.href = parsed.href; a.target = "_blank"; a.rel = "noreferrer"; a.textContent = label;
+      return a;
+    } catch { return null; }
+  }
+  const labelDid = value => value.length > 25 ? value.slice(0, 13) + "…" + value.slice(-7) : value;
+  function dateLabel(value) {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? "date unavailable" : d.toLocaleString();
+  }
+  function renderCard(market) {
+    const p = market.payload;
+    const predictions = getPredictions(p.id);
+    const resolution = getResolution(p.id);
+    const closed = Date.now() >= p.closesAt || Boolean(resolution);
+    const myPredictions = predictions.filter(item => item.from === didKey() && Date.parse(item.ts) <= p.closesAt);
+    const myLatest = myPredictions.at(-1);
+    const card = document.createElement("article"); card.className = "card";
+    const top = document.createElement("div"); top.className = "card-top";
+    const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = p.category;
+    const state = document.createElement("span"); state.className = "state" + (closed ? " closed" : "");
+    state.textContent = resolution ? "Resolved" : closed ? "Closed for predictions" : "Closes " + dateLabel(p.closesAt);
+    top.append(tag, state);
+    const question = document.createElement("h2"); question.className = "question"; question.textContent = p.question;
+    const meta = document.createElement("div"); meta.className = "meta"; meta.textContent = "Created by " + labelDid(market.from) + " · " + predictions.length + " signed prediction record" + (predictions.length === 1 ? "" : "s");
+    card.append(top, question, meta);
+    if (p.sourceUrl) {
+      const link = safeLink(p.sourceUrl, "Background source ↗");
+      if (link) { const row = document.createElement("div"); row.className = "source"; row.appendChild(link); card.appendChild(row); }
+    }
+    const votes = document.createElement("div"); votes.className = "vote-row";
+    for (const outcome of ["YES", "NO"]) {
+      const btn = document.createElement("button"); btn.className = "vote " + outcome.toLowerCase();
+      if (myLatest?.payload.outcome === outcome) btn.classList.add("selected");
+      btn.dataset.vote = outcome; btn.textContent = outcome + (myLatest?.payload.outcome === outcome ? " · your pick" : "");
+      btn.disabled = !connected() || closed;
+      btn.addEventListener("click", async () => {
+        const status = card.querySelector(".your-pick");
+        btn.disabled = true;
+        try {
+          await postRecord({ v: 1, type: "prediction", marketId: p.id, outcome }, status, btn);
+        } catch (error) { notify(status, error.message, true); btn.disabled = false; }
+      });
+      votes.appendChild(btn);
+    }
+    card.appendChild(votes);
+    if (myLatest && !resolution) {
+      const chosen = document.createElement("div"); chosen.className = "your-pick"; chosen.textContent = "Your current pick: " + myLatest.payload.outcome + " · change it any time before the deadline.";
+      card.appendChild(chosen);
+    }
+    if (resolution) {
+      const result = document.createElement("div"); result.className = "resolution";
+      result.textContent = resolution.payload.outcome === "VOID" ? "Voided · no points awarded." : "Result: " + resolution.payload.outcome + ".";
+      if (resolution.payload.evidenceUrl) {
+        result.append(" ");
+        const link = safeLink(resolution.payload.evidenceUrl, "Evidence ↗");
+        if (link) result.appendChild(link);
+      }
+      card.appendChild(result);
+    } else if (closed && didKey() === market.from) {
+      const form = document.createElement("div"); form.className = "resolve-form";
+      const select = document.createElement("select");
+      for (const value of ["YES", "NO", "VOID"]) { const option = document.createElement("option"); option.value = value; option.textContent = value === "VOID" ? "Void market" : "Resolve " + value; select.appendChild(option); }
+      const evidence = document.createElement("input"); evidence.type = "url"; evidence.placeholder = "https://result-source (required)";
+      const button = document.createElement("button"); button.className = "button primary"; button.textContent = "Record result";
+      const status = document.createElement("span"); status.className = "message";
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        try {
+          await postRecord({ v: 1, type: "resolution", marketId: p.id, outcome: select.value, evidenceUrl: evidence.value.trim() }, status, button);
+        } catch (error) { notify(status, error.message, true); button.disabled = false; }
+      });
+      form.append(select, evidence, button, status); card.appendChild(form);
+    }
+    const footer = document.createElement("div"); footer.className = "meta"; footer.style.marginTop = "14px"; footer.textContent = "Technocore record #" + market.seq + " · " + dateLabel(market.ts);
+    card.appendChild(footer);
+    return card;
+  }
+  function renderScores() {
+    const totals = new Map();
+    for (const marketRecord of records.filter(r => r.payload.type === "market")) {
+      const p = marketRecord.payload; const resolution = getResolution(p.id);
+      if (!resolution || resolution.payload.outcome === "VOID") continue;
+      const latest = new Map();
+      for (const vote of getPredictions(p.id)) {
+        if (Date.parse(vote.ts) <= p.closesAt) latest.set(vote.from, vote);
+      }
+      for (const [did, vote] of latest) if (vote.payload.outcome === resolution.payload.outcome) totals.set(did, (totals.get(did) || 0) + 100);
+    }
+    const list = [...totals].sort((a,b) => b[1] - a[1]).slice(0,10);
+    const el = document.getElementById("scores"); el.replaceChildren();
+    if (!list.length) { const empty = document.createElement("span"); empty.className = "meta"; empty.textContent = "Scores appear after a market is resolved."; el.appendChild(empty); return; }
+    list.forEach(([did, points], i) => {
+      const row = document.createElement("div"); row.className = "score";
+      const name = document.createElement("span"); name.textContent = (i + 1) + ". " + labelDid(did);
+      const value = document.createElement("strong"); value.textContent = points + " pts";
+      row.append(name, value); el.appendChild(row);
+    });
+  }
+  function render() {
+    const marketRecords = records.filter(r => r.payload.type === "market").slice().reverse();
+    const visible = marketRecords.filter(item => {
+      const resolved = Boolean(getResolution(item.payload.id));
+      if (filter === "resolved") return resolved;
+      if (filter === "open") return !resolved && Date.now() < item.payload.closesAt;
+      return true;
+    });
+    marketEl.replaceChildren();
+    if (!visible.length) {
+      const empty = document.createElement("div"); empty.className = "empty";
+      empty.textContent = filter === "open" ? "No open markets yet. Create the first useful question below." : "No markets match this view yet.";
+      marketEl.appendChild(empty);
+    } else visible.forEach(item => marketEl.appendChild(renderCard(item)));
+    renderScores();
+    updateWalletControls();
+  }
+  async function loadMarkets() {
+    statusEl.innerHTML = "<b>●</b> Refreshing public records…";
+    try {
+      const response = await fetch("/api/technocore/markets", { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Technocore is temporarily unavailable.");
+      records = Array.isArray(data.messages) ? data.messages.slice().sort((a,b) => a.seq - b.seq) : [];
+      statusEl.innerHTML = "<b>●</b> Technocore connected · " + records.length + " verified records";
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message || "Could not load the Technocore record.";
+      marketEl.replaceChildren();
+      const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "Could not load markets. Try Refresh in a moment.";
+      marketEl.appendChild(empty);
+    }
+  }
+  connectBtn.addEventListener("click", async () => {
+    connectBtn.disabled = true; walletMessage.textContent = "Approve wallet access, then choose the account that matches your Ed25519 DID.";
+    try {
+      const injected = window.injectedWeb3 || {};
+      let match = null;
+      for (const extension of Object.values(injected)) {
+        if (typeof extension?.enable !== "function") continue;
+        try {
+          const api = await extension.enable("FLOP Community Prediction Market");
+          const accounts = await api?.accounts?.get?.();
+          if (accounts?.length && typeof api?.signer?.signRaw === "function") {
+            match = { accounts, signer: api.signer }; break;
+          }
+        } catch {}
+      }
+      if (!match) throw new Error("No compatible Polkadot wallet found. Install/enable a wallet extension and try again.");
+      signer = match.signer; accountList = match.accounts;
+      accountEl.replaceChildren();
+      accountList.forEach(item => {
+        const option = document.createElement("option"); option.value = item.address;
+        option.textContent = item.address + (item.type ? " · " + item.type : "");
+        accountEl.appendChild(option);
+      });
+      accountEl.disabled = false; connectBtn.textContent = "Wallet connected";
+      walletMessage.textContent = "Wallet connected. Choose the Ed25519 account belonging to your DID. Your wallet shows every signature for approval.";
+      updateWalletControls();
+    } catch (error) { walletMessage.textContent = error.message || "Could not connect the wallet."; }
+    finally { connectBtn.disabled = false; }
+  });
+  accountEl.addEventListener("change", updateWalletControls);
+  didEl.addEventListener("input", updateWalletControls);
+  document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(item => item.classList.toggle("active", item === button));
+    filter = button.dataset.filter; render();
+  }));
+  document.getElementById("refresh").addEventListener("click", loadMarkets);
+  document.getElementById("createForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const msg = document.getElementById("createMessage"); msg.textContent = "";
+    const localDate = new Date(document.getElementById("closesAt").value);
+    if (Number.isNaN(localDate.getTime())) { notify(msg, "Choose a valid deadline.", true); return; }
+    const button = createBtn; button.disabled = true;
+    const random = crypto.getRandomValues(new Uint8Array(8));
+    const id = [...random].map(byte => byte.toString(16).padStart(2, "0")).join("");
+    try {
+      await postRecord({
+        v: 1, type: "market", id, question: clean(document.getElementById("question").value),
+        category: document.getElementById("category").value, closesAt: localDate.getTime(),
+        sourceUrl: document.getElementById("sourceUrl").value.trim()
+      }, msg, button);
+      event.target.reset(); setDefaultClose();
+    } catch (error) { notify(msg, error.message, true); }
+    finally { updateWalletControls(); }
+  });
+  function setDefaultClose() {
+    const close = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    close.setMinutes(close.getMinutes() - close.getTimezoneOffset());
+    document.getElementById("closesAt").value = close.toISOString().slice(0,16);
+  }
+  setDefaultClose();
+  loadMarkets();
+})();
+</script>
+</body>
+</html>
