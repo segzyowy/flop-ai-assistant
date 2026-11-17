@@ -5,7 +5,7 @@
   "type": "module",
   "description": "A Netlify-hosted chatbot frontend connected to FLOP inference.",
   "dependencies": {
-    "@flop-labs/client": "0.2.1"
+    "@flop-labs/client": "0.2.2"
   },
   "engines": {
     "node": ">=22"
