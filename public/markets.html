@@ -146,8 +146,9 @@
       votes.appendChild(btn);
     }
     card.appendChild(votes);
-    if (myLatest && !resolution) {
-      const chosen = document.createElement("div"); chosen.className = "your-pick"; chosen.textContent = "Your current pick: " + myLatest.payload.outcome + " · change it any time before the deadline.";
+    if (!resolution) {
+      const chosen = document.createElement("div"); chosen.className = "your-pick";
+      chosen.textContent = myLatest ? "Your current pick: " + myLatest.payload.outcome + " · change it any time before the deadline." : (closed ? "Predictions are closed." : "Choose YES or NO to add your signed prediction.");
       card.appendChild(chosen);
     }
     if (resolution) {
