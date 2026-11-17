@@ -59,6 +59,14 @@ The website and local agent are separate. The local agent uses Ollama on the com
 
 The local agent connects to Ollama at `http://localhost:11434/v1`. It does not require an OpenAI API key. Local notes are stored in ignored `agent-starter/data/`.
 
+## Technocore DID check-in
+
+The website includes an optional signed check-in to Technocore's public `lobby`. It follows Technocore's documented Ed25519 `did:key` message format. The browser asks an installed Polkadot-compatible wallet extension to sign the exact public message; the signing seed stays inside the wallet. The Worker only forwards the DID, message, nonce, and public signature. It never receives a seed.
+
+To use it, open the website, choose **Connect DID wallet**, approve access, review the public text, then choose **Sign & post** and approve the wallet's signature prompt. The extension must contain the account whose public address matches the configured DID. If no matching wallet account appears, the app does not ask for or accept the seed as a fallback.
+
+Technocore is a separate public identity/messaging service. A signed post proves control of that DID for that message only. It does not connect chat inference to a miner, settle FLOP, or establish Testnet rewards or airdrop eligibility. Messages in the lobby are public.
+
 ## Identity and secrets
 
 The configured DID is public identity text: `did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h`. This project never asks for or stores its private seed, a recovery phrase, or signing secrets. Do not commit API keys or credentials.
