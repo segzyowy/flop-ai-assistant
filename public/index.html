@@ -31,6 +31,7 @@
     .identity-copy{font-size:11px;line-height:1.55;color:var(--muted);margin:6px 0 0}.identity-copy code{color:#c9c1ff;overflow-wrap:anywhere}
     .identity-controls{display:flex;gap:8px;align-items:center}.identity-controls textarea{width:260px;min-height:42px;max-height:90px;resize:vertical;border:1px solid var(--line);border-radius:9px;background:#0c101c;color:var(--text);padding:9px;font:12px "DM Sans",sans-serif}
     .identity-button{border:1px solid #6257a4;background:#252044;color:#fff;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:700;white-space:nowrap}.identity-button.secondary{background:#121a2a;border-color:#344158}.identity-button:disabled{opacity:.5;cursor:not-allowed}
+    .identity-account-select{max-width:220px;border:1px solid var(--line);border-radius:9px;background:#0c101c;color:var(--text);padding:9px;font-size:11px}.identity-account-select[hidden]{display:none}
     .identity-foot{grid-column:1/-1;color:#78829d;font-size:10px;line-height:1.5}.identity-foot a{color:#a99aff}
     @media(max-width:760px){.identity-panel{width:calc(100% - 28px);grid-template-columns:1fr;margin-top:12px;padding:13px}.identity-controls{flex-direction:column;align-items:stretch}.identity-controls textarea{width:100%}.identity-controls button{width:100%}.identity-foot{grid-column:auto}}
     @keyframes blink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -60,6 +61,7 @@
       <div class="identity-controls">
         <textarea id="checkinText" maxlength="240" aria-label="Public check-in text">FLOP AI Assistant is live. This is my public Technocore check-in.</textarea>
         <button class="identity-button secondary" id="connectWallet">Connect DID wallet</button>
+        <select class="identity-account-select" id="walletAccountSelect" aria-label="Choose DID wallet account" hidden></select>
         <button class="identity-button" id="signCheckin" disabled>Sign &amp; post</button>
       </div>
       <div class="identity-foot">Your wallet signs in its own approval window; this site never sees your seed. The check-in is public on Technocore. It proves control of this DID only, not FLOP Testnet activity, payments, rewards, or eligibility. <a href="https://technocore.chat/r/lobby" target="_blank" rel="noreferrer">View public lobby</a>.</div>
@@ -102,8 +104,10 @@
   const identityStatus = document.getElementById('identityStatus');
   const connectWalletBtn = document.getElementById('connectWallet');
   const signCheckinBtn = document.getElementById('signCheckin');
+  const walletAccountSelect = document.getElementById('walletAccountSelect');
   const DID = 'did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h';
   const DID_ACCOUNT = '5FCmPHYEYPhngtNqthEq63mMsA7ramnXesSBcnZaQzVPAsq3';
+  let walletChoices = [];
   let walletAccount = null;
   let walletSigner = null;
 
@@ -130,32 +134,54 @@
   }).catch(() => {});
   connectWalletBtn.addEventListener('click', async () => {
     connectWalletBtn.disabled = true;
-    identityStatus.textContent = 'Approve account access in your wallet. The app will only use the account matching this DID.';
+    identityStatus.textContent = 'Approve wallet access. Then choose the account that belongs to this public DID.';
     try {
       const injected = window.injectedWeb3 || {};
-      let match = null;
+      walletChoices = [];
       for (const [source, extension] of Object.entries(injected)) {
         if (typeof extension?.enable !== 'function') continue;
         try {
           const api = await extension.enable('FLOP AI Assistant');
           const accounts = await api?.accounts?.get?.();
-          const account = accounts?.find(item => item.address === DID_ACCOUNT);
-          if (account && typeof api?.signer?.signRaw === 'function') {
-            match = { account, signer: api.signer };
-            break;
+          if (typeof api?.signer?.signRaw === 'function') {
+            for (const account of accounts || []) {
+              walletChoices.push({ account, signer: api.signer, source });
+            }
           }
         } catch {}
       }
-      if (!match) throw new Error('No supported wallet account matching this DID was found. Add this DID account to a Polkadot-compatible extension, then try again.');
-      walletAccount = match.account;
-      walletSigner = match.signer;
-      identityStatus.textContent = 'Wallet connected for the selected public DID. Review the public text, then choose Sign & post.';
+      if (!walletChoices.length) throw new Error('No accounts were shared with this site. Open your Polkadot-compatible wallet extension, unlock it, and allow this site to access the DID account.');
+      walletAccountSelect.replaceChildren();
+      walletChoices.forEach((choice, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = choice.account.address + (choice.account.address === DID_ACCOUNT ? ' · selected DID account' : '');
+        walletAccountSelect.appendChild(option);
+      });
+      const exact = walletChoices.findIndex(choice => choice.account.address === DID_ACCOUNT);
+      walletAccountSelect.value = String(exact >= 0 ? exact : 0);
+      walletAccountSelect.hidden = walletChoices.length < 2;
+      const selected = walletChoices[Number(walletAccountSelect.value)];
+      walletAccount = selected.account;
+      walletSigner = selected.signer;
       signCheckinBtn.disabled = false;
+      identityStatus.textContent = exact >= 0
+        ? 'DID account connected. Review the public text before signing.'
+        : 'Wallet connected. Choose the DID account if several are listed. A different SS58 address format may still represent the same key; Technocore checks the signature when you post.';
     } catch (error) {
       identityStatus.textContent = error.message || 'Could not connect a wallet extension.';
     } finally {
       connectWalletBtn.disabled = false;
     }
+  });
+  walletAccountSelect.addEventListener('change', () => {
+    const selected = walletChoices[Number(walletAccountSelect.value)];
+    walletAccount = selected?.account || null;
+    walletSigner = selected?.signer || null;
+    identityStatus.textContent = walletAccount
+      ? 'Selected wallet account: ' + walletAccount.address + '. Review the public text, then choose Sign & post.'
+      : 'Choose an account shared by your wallet.';
+    signCheckinBtn.disabled = !walletAccount || !walletSigner;
   });
   signCheckinBtn.addEventListener('click', async () => {
     if (!walletAccount || !walletSigner) return;
@@ -205,7 +231,7 @@
       link.textContent = ' Open lobby';
       identityStatus.appendChild(link);
     } catch (error) {
-      identityStatus.textContent = error.message || 'The signed check-in could not be posted.';
+      identityStatus.textContent = error.message || 'The signed check-in could not be posted.'; if (identityStatus.textContent.includes('rejected') || identityStatus.textContent.includes('signature')) identityStatus.textContent += ' Make sure the selected wallet account is the Ed25519 key for this DID; never enter or share its seed.';
     } finally {
       signCheckinBtn.disabled = false;
     }
