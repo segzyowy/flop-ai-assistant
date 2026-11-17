@@ -17,6 +17,7 @@
     .brand{display:flex;align-items:center;gap:11px;padding:0 8px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--purple),#4d9cf7);display:grid;place-items:center;box-shadow:0 8px 28px #7359ed55}.logo svg{width:23px}
     .brand-name{font:700 17px "Space Grotesk";letter-spacing:-.5px}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.7px;margin-top:2px}
     .new-chat{width:100%;border:1px solid #6452bb;background:#211b3e;color:#fff;padding:12px 14px;border-radius:12px;text-align:left;font-weight:600;display:flex;gap:10px;align-items:center}
+    .market-nav{display:flex;align-items:center;gap:11px;padding:12px;border-radius:12px;text-decoration:none;background:linear-gradient(125deg,#3a306c,#1b5365);border:1px solid #8274ce;box-shadow:0 8px 28px #6253ca35;color:#fff;transition:.18s}.market-nav:hover{transform:translateY(-1px);border-color:#b4a8ff;box-shadow:0 10px 32px #6253ca55}.market-nav-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#ffffff1c;font-size:18px}.market-nav strong{display:block;font-size:12px}.market-nav small{display:block;margin-top:2px;color:#d3d0ef;font-size:10px}.market-top-link{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:10px;border:1px solid #8171d0;background:linear-gradient(120deg,#3a306c,#1b5365);color:#fff;text-decoration:none;font-size:11px;font-weight:800;white-space:nowrap}.market-top-link:hover{filter:brightness(1.15)}
     .side-label{font-size:10px;color:#727b98;letter-spacing:1.7px;text-transform:uppercase;padding:0 9px}
     .history{display:flex;flex-direction:column;gap:5px;overflow:auto}.history button{background:transparent;border:0;color:#aeb4ca;text-align:left;padding:10px;border-radius:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.history button:hover{background:var(--panel2);color:#fff}
     .side-bottom{margin-top:auto}.network-card{border:1px solid var(--line);background:linear-gradient(145deg,#171a2c,#111522);border-radius:14px;padding:14px}.network-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}.dot{width:8px;height:8px;background:#e0ad54;border-radius:50%;box-shadow:0 0 12px #e0ad5480}.network-card p{font-size:11px;line-height:1.55;color:var(--muted);margin:9px 0 0}
@@ -41,6 +42,7 @@
   <aside>
     <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/><path d="m18.5 2 .8 2.7L22 5.5l-2.7.8-.8 2.7-.8-2.7-2.7-.8 2.7-.8.8-2.7Z" fill="white"/></svg></div><div><div class="brand-name">FLOP AI</div><div class="brand-sub">INTELLIGENCE ASSISTANT</div></div></div>
     <button class="new-chat" id="newChat"><span>＋</span> New conversation</button>
+    <a class="market-nav" href="/markets.html"><span class="market-nav-icon">↗</span><span><strong>Prediction Market</strong><small>Community forecasts & points</small></span></a>
     <div class="side-label">Recent conversations</div><div class="history" id="history"><div style="padding:10px;color:#6f7891;font-size:12px">Your chats appear here.</div></div>
     <div class="side-bottom"><div class="network-card"><div class="network-top"><span class="dot"></span><span id="connectionLabel">Checking AI provider…</span></div><p id="connectionText">Checking the configured AI provider.</p></div></div>
   </aside>
@@ -48,7 +50,7 @@
     <header class="topbar">
       <div class="mobile-brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/></svg></div>FLOP AI Assistant</div>
       <div class="top-title">Your intelligent workspace</div>
-      <div class="top-right"><div class="pill"><span class="tiny"></span> Checking AI provider…</div></div>
+      <div class="top-right"><a class="market-top-link" href="/markets.html">Prediction Market <span aria-hidden="true">↗</span></a><div class="pill"><span class="tiny"></span> Checking AI provider…</div></div>
     </header>
     <section class="identity-panel" aria-label="Technocore DID connection">
       <div>
