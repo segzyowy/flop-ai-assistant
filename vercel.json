@@ -2,8 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "public",
   "functions": {
-    "api/chat.js": {
+    "api/research.js": {
       "maxDuration": 30
+    },
+    "api/flop-data.js": {
+      "maxDuration": 15
     }
   }
 }
