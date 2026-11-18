@@ -36,6 +36,8 @@
     @media(max-width:760px){.identity-panel{width:calc(100% - 28px);grid-template-columns:1fr;margin-top:12px;padding:13px}.identity-controls{flex-direction:column;align-items:stretch}.identity-controls textarea{width:100%}.identity-controls button{width:100%}.identity-foot{grid-column:auto}}
     @keyframes blink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
     @media(max-width:760px){.market-top-link{padding:8px;font-size:10px}.top-right{gap:7px}.app{grid-template-columns:1fr}aside{display:none}.topbar{height:62px;padding:0 17px}.mobile-brand{display:flex;align-items:center;gap:8px;font:700 14px "Space Grotesk"}.mobile-brand .logo{width:30px;height:30px;border-radius:10px}.top-title{display:none}.chat-wrap{padding:30px 16px 18px}.welcome{margin:auto 0 25px}.suggestions{grid-template-columns:1fr}.message{max-width:96%}.pill{font-size:10px}}
+    .wallet-connect-btn{border:1px solid #8171d0;background:linear-gradient(135deg,#7464dc,#397f99);color:#fff;border-radius:11px;padding:9px 13px;font:700 11px "DM Sans",sans-serif;white-space:nowrap;box-shadow:0 5px 18px #5742b533;transition:.18s}.wallet-connect-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.wallet-connect-btn:disabled{opacity:.65;cursor:wait}.wallet-account-select{max-width:170px;border:1px solid var(--line);background:#121625;color:#e7eaf6;border-radius:10px;padding:8px 9px;font:500 10px "DM Sans",sans-serif}
+    @media(max-width:760px){.pill{display:none}.topbar{gap:7px}.top-right{gap:6px;min-width:0}.market-top-link{font-size:0;padding:8px 9px}.market-top-link span{font-size:14px}.wallet-connect-btn{padding:8px 9px;font-size:10px}.wallet-account-select{max-width:110px;padding:7px;font-size:9px}}
   </style>
 </head>
 <body>
@@ -51,23 +53,11 @@
     <header class="topbar">
       <div class="mobile-brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/></svg></div>FLOP AI Assistant</div>
       <div class="top-title">Your intelligent workspace</div>
-      <div class="top-right"><a class="market-top-link" href="/markets.html">Prediction Market <span aria-hidden="true">↗</span></a><div class="pill"><span class="tiny"></span> Checking AI provider…</div></div>
+      <div class="top-right"><a class="market-top-link" href="/markets.html">Prediction Market <span aria-hidden="true">↗</span></a><div class="pill"><span class="tiny"></span> Checking AI provider…</div><select class="wallet-account-select" id="walletAccountSelect" aria-label="Choose wallet account" hidden></select><button class="wallet-connect-btn" id="connectWallet" type="button">Connect wallet</button></div>
     </header>
-    <section class="identity-panel" aria-label="Technocore DID connection">
-      <div>
-        <div class="identity-title"><span class="dot"></span><span>Technocore · DID identity</span></div>
-        <p class="identity-copy"><span id="identityStatus">Checking Technocore…</span><br>Public DID: <code>did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h</code></p>
-      </div>
-      <div class="identity-controls">
-        <textarea id="checkinText" maxlength="240" aria-label="Public check-in text">FLOP AI Assistant is live. This is my public Technocore check-in.</textarea>
-        <button class="identity-button secondary" id="connectWallet">Connect DID wallet</button>
-        <select class="identity-account-select" id="walletAccountSelect" aria-label="Choose DID wallet account" hidden></select>
-        <button class="identity-button" id="signCheckin" disabled>Sign &amp; post</button>
-      </div>
-      <div class="identity-foot">Your wallet signs in its own approval window; this site never sees your seed. The check-in is public on Technocore. It proves control of this DID only, not FLOP Testnet activity, payments, rewards, or eligibility. <a href="https://technocore.chat/r/lobby" target="_blank" rel="noreferrer">View public lobby</a>.</div>
-    </section>
+
     <section aria-label="Community prediction market" style="width:min(900px,calc(100% - 56px));margin:0 auto;padding:15px 18px;border:1px solid #3b3761;border-radius:14px;background:linear-gradient(120deg,#1d1b38,#111b2a);display:flex;justify-content:space-between;align-items:center;gap:16px">
-      <div><div style="font:600 13px &quot;Space Grotesk&quot;;color:#eee">Community Prediction Market</div><p style="font-size:11px;line-height:1.5;color:#9299b2;margin:5px 0 0">Share a forecast, make a pick, and build a points track record. Signed records are public on Technocore.</p></div>
+      <div><div style="font:600 13px &quot;Space Grotesk&quot;;color:#eee">Crypto Forecasts</div><p style="font-size:11px;line-height:1.5;color:#9299b2;margin:5px 0 0">Make a weekly forecast on BTC, ETH, SOL and more. Free to use; signed forecast proofs are public on Technocore.</p></div>
       <a href="/markets.html" style="flex:0 0 auto;border:1px solid #6659aa;background:#252044;color:#fff;border-radius:9px;padding:10px 13px;font-size:11px;font-weight:700;text-decoration:none">Explore markets ↗</a>
     </section>
     <section class="chat-wrap">
@@ -101,142 +91,78 @@
   let conversations = [];
   let current = [];
   let busy = false;
-  const identityStatus = document.getElementById('identityStatus');
   const connectWalletBtn = document.getElementById('connectWallet');
-  const signCheckinBtn = document.getElementById('signCheckin');
   const walletAccountSelect = document.getElementById('walletAccountSelect');
-  const DID = 'did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h';
-  const DID_ACCOUNT = '5FCmPHYEYPhngtNqthEq63mMsA7ramnXesSBcnZaQzVPAsq3';
+  const WALLET_STORE = 'flop-wallet-v1';
   let walletChoices = [];
   let walletAccount = null;
   let walletSigner = null;
-
-  fetch('/api/technocore/status').then(r => r.json()).then(data => {
-    identityStatus.textContent = data.message || 'Technocore status is unavailable.';
-  }).catch(() => { identityStatus.textContent = 'Could not check Technocore right now.'; });
-  fetch('/api/status').then(r => r.json()).then(data => {
-    const pill = document.querySelector('.pill');
-    const label = document.getElementById('connectionLabel');
-    const copy = document.getElementById('connectionText');
-    if (data.provider === 'FLOP DevNet') {
-      if (pill) pill.textContent = 'FLOP DevNet · development only';
-      if (label) label.textContent = 'FLOP DevNet gateway configured';
-      if (copy) copy.textContent = 'AI chat uses the FLOP DevNet gateway when its key and model are accepted. This is not Testnet.';
-    } else if (data.provider === 'Cloudflare Workers AI') {
-      if (pill) pill.textContent = 'Cloudflare Workers AI · daily free allowance';
-      if (label) label.textContent = 'Cloudflare AI ready · FLOP gateway not configured';
-      if (copy) copy.textContent = 'AI chat uses Cloudflare Workers AI. Technocore DID check-ins below are a separate public service.';
-    } else {
-      if (pill) pill.textContent = 'FLOP gateway key required';
-      if (label) label.textContent = 'No AI provider configured';
-      if (copy) copy.textContent = 'Set FLOP_API_KEY in this Vercel project’s Environment Variables, then redeploy. Technocore DID check-ins work separately.';
-    }
-  }).catch(() => {});
-  connectWalletBtn.addEventListener('click', async () => {
-    connectWalletBtn.disabled = true;
-    identityStatus.textContent = 'Approve wallet access. Then choose the account that belongs to this public DID.';
+  function shortWallet(address) { return address ? address.slice(0, 8) + '…' + address.slice(-5) : ''; }
+  function saveWallet(choice) {
+    try {
+      localStorage.setItem(WALLET_STORE, JSON.stringify({
+        source: choice.source, address: choice.account.address, type: choice.account.type || ''
+      }));
+    } catch {}
+  }
+  function updateWalletButton(choice) {
+    connectWalletBtn.textContent = choice
+      ? (String(choice.account.type || 'wallet').toUpperCase() + ' · ' + shortWallet(choice.account.address))
+      : 'Connect wallet';
+    connectWalletBtn.title = choice ? 'Wallet connected. Click to refresh wallet access.' : 'Connect a Polkadot-compatible wallet';
+    connectWalletBtn.setAttribute('aria-label', choice ? 'Connected wallet ' + shortWallet(choice.account.address) : 'Connect wallet');
+  }
+  async function connectWallet(preferred = null, quiet = false) {
+    if (!quiet) connectWalletBtn.disabled = true;
     try {
       const injected = window.injectedWeb3 || {};
+      const entries = preferred?.source && injected[preferred.source]
+        ? [[preferred.source, injected[preferred.source]]]
+        : Object.entries(injected);
       walletChoices = [];
-      for (const [source, extension] of Object.entries(injected)) {
+      for (const [source, extension] of entries) {
         if (typeof extension?.enable !== 'function') continue;
         try {
           const api = await extension.enable('FLOP AI Assistant');
           const accounts = await api?.accounts?.get?.();
           if (typeof api?.signer?.signRaw === 'function') {
-            for (const account of accounts || []) {
-              walletChoices.push({ account, signer: api.signer, source });
-            }
+            for (const account of accounts || []) walletChoices.push({ account, signer: api.signer, source });
           }
         } catch {}
       }
-      if (!walletChoices.length) throw new Error('No accounts were shared with this site. Open your Polkadot-compatible wallet extension, unlock it, and allow this site to access the DID account.');
+      if (!walletChoices.length) throw new Error('No wallet account was shared with this site. Unlock your Polkadot-compatible wallet, then connect again.');
       walletAccountSelect.replaceChildren();
       walletChoices.forEach((choice, index) => {
         const option = document.createElement('option');
         option.value = String(index);
-        option.textContent = choice.account.address + (choice.account.address === DID_ACCOUNT ? ' · selected DID account' : '');
+        option.textContent = shortWallet(choice.account.address) + ' · ' + (choice.account.type || 'account');
         walletAccountSelect.appendChild(option);
       });
-      const exact = walletChoices.findIndex(choice => choice.account.address === DID_ACCOUNT);
-      walletAccountSelect.value = String(exact >= 0 ? exact : 0);
+      const preferredIndex = walletChoices.findIndex(choice =>
+        choice.account.address === preferred?.address && (!preferred?.source || choice.source === preferred.source)
+      );
+      const edIndex = walletChoices.findIndex(choice => String(choice.account.type || '').toLowerCase() === 'ed25519');
+      walletAccountSelect.value = String(preferredIndex >= 0 ? preferredIndex : edIndex >= 0 ? edIndex : 0);
       walletAccountSelect.hidden = walletChoices.length < 2;
       const selected = walletChoices[Number(walletAccountSelect.value)];
-      walletAccount = selected.account;
-      walletSigner = selected.signer;
-      signCheckinBtn.disabled = false;
-      identityStatus.textContent = exact >= 0
-        ? 'DID account connected. Review the public text before signing.'
-        : 'Wallet connected. Choose the DID account if several are listed. A different SS58 address format may still represent the same key; Technocore checks the signature when you post.';
+      walletAccount = selected.account; walletSigner = selected.signer;
+      saveWallet(selected); updateWalletButton(selected);
     } catch (error) {
-      identityStatus.textContent = error.message || 'Could not connect a wallet extension.';
+      if (!quiet) { updateWalletButton(null); connectWalletBtn.title = error.message || 'Could not connect wallet.'; }
     } finally {
-      connectWalletBtn.disabled = false;
+      if (!quiet) connectWalletBtn.disabled = false;
     }
-  });
+  }
+  connectWalletBtn.addEventListener('click', () => connectWallet());
   walletAccountSelect.addEventListener('change', () => {
     const selected = walletChoices[Number(walletAccountSelect.value)];
-    walletAccount = selected?.account || null;
-    walletSigner = selected?.signer || null;
-    identityStatus.textContent = walletAccount
-      ? 'Selected wallet account: ' + walletAccount.address + '. Review the public text, then choose Sign & post.'
-      : 'Choose an account shared by your wallet.';
-    signCheckinBtn.disabled = !walletAccount || !walletSigner;
+    walletAccount = selected?.account || null; walletSigner = selected?.signer || null;
+    if (selected) { saveWallet(selected); updateWalletButton(selected); }
   });
-  signCheckinBtn.addEventListener('click', async () => {
-    if (!walletAccount || !walletSigner) return;
-    const text = document.getElementById('checkinText').value
-      .replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Zl}\p{Zp}]/gu, ' ').trim();
-    if (!text || text.length > 240) {
-      identityStatus.textContent = 'Enter a public check-in of 1–240 characters.';
-      return;
-    }
-    signCheckinBtn.disabled = true;
-    try {
-      const storageKey = 'technocore-lobby-nonce-' + DID;
-      let previous = 0;
-      try { previous = Number(localStorage.getItem(storageKey) || 0); } catch {}
-      const nonce = String(Math.max(Date.now(), Number.isSafeInteger(previous) ? previous + 1 : 0));
-      const canonical = 'lobby|' + nonce + '|' + text;
-      const raw = new TextEncoder().encode(canonical);
-      let hex = '';
-      for (const byte of raw) hex += byte.toString(16).padStart(2, '0');
-      const signed = await walletSigner.signRaw({
-        address: walletAccount.address,
-        data: '0x' + hex,
-        type: 'bytes'
-      });
-      const signatureHex = signed?.signature;
-      if (typeof signatureHex !== 'string' || !/^0x[0-9a-fA-F]{128}$/.test(signatureHex)) {
-        throw new Error('The wallet returned an unsupported signature. No seed was accessed.');
-      }
-      const signatureBytes = Uint8Array.from(signatureHex.slice(2).match(/.{2}/g), pair => parseInt(pair, 16));
-      let binary = '';
-      for (const byte of signatureBytes) binary += String.fromCharCode(byte);
-      const signature = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-      if (signature.length !== 86 || !/[AQgw]$/.test(signature)) throw new Error('The wallet signature did not match Technocore’s required format.');
-      const response = await fetch('/api/technocore/post', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ did: DID, nonce, text, sig: signature })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Technocore did not accept the check-in.');
-      try { localStorage.setItem(storageKey, nonce); } catch {}
-      identityStatus.textContent = 'Signed check-in accepted by Technocore for this DID. It is public in the lobby.';
-      const link = document.createElement('a');
-      link.href = 'https://technocore.chat/r/lobby';
-      link.target = '_blank';
-      link.rel = 'noreferrer';
-      link.textContent = ' Open lobby';
-      identityStatus.appendChild(link);
-    } catch (error) {
-      identityStatus.textContent = error.message || 'The signed check-in could not be posted.'; if (identityStatus.textContent.includes('rejected') || identityStatus.textContent.includes('signature')) identityStatus.textContent += ' Make sure the selected wallet account is the Ed25519 key for this DID; never enter or share its seed.';
-    } finally {
-      signCheckinBtn.disabled = false;
-    }
-  });
-
+  try {
+    const savedWallet = JSON.parse(localStorage.getItem(WALLET_STORE) || 'null');
+    if (savedWallet?.address && savedWallet?.source) connectWallet(savedWallet, true);
+  } catch {}
   try { conversations = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch { conversations = []; }
   function save() { localStorage.setItem(STORE, JSON.stringify(conversations.slice(0,20))); renderHistory(); }
   function renderHistory() {
