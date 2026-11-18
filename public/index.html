@@ -1,325 +1,265 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#09111d">
-<meta name="description" content="FLOP-powered market research briefs, public DevNet model data, and community forecasts.">
-<title>FLOP Market Research Desk</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{color-scheme:dark;--bg:#09111d;--panel:#101c2b;--panel2:#142337;--line:#26384d;--text:#f1f6fc;--muted:#9dafc3;--cyan:#70d8e4;--mint:#68d9ad;--violet:#a997ff;--red:#f18b91}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 73% -18%,#1b4561 0,transparent 35%),radial-gradient(ellipse at 0 10%,#22204a 0,transparent 32%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}a{color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer}
-.topbar{height:72px;display:flex;align-items:center;gap:25px;padding:0 max(24px,calc((100vw - 1240px)/2));border-bottom:1px solid #26384d99;background:#09111dbb;backdrop-filter:blur(14px);position:sticky;top:0;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 16px "Space Grotesk";white-space:nowrap}.brand-icon{width:36px;height:36px;border-radius:12px;background:linear-gradient(140deg,#886fff,#38abc4);display:grid;place-items:center;box-shadow:0 8px 24px #268aa855;font-size:20px}
-.navlinks{display:flex;align-items:center;gap:20px;margin-left:auto}.navlinks a{font-size:12px;color:#c3d0df;text-decoration:none}.navlinks a:hover{color:#fff}.wallet-tools{display:flex;align-items:center;gap:8px}.wallet-select{max-width:142px;background:#101c2b;color:#e8f0fa;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:11px}.wallet-btn{border:1px solid #47627d;background:linear-gradient(130deg,#173a50,#29264e);color:#fff;border-radius:10px;padding:10px 13px;font-size:11px;font-weight:700;white-space:nowrap}.wallet-btn:hover{border-color:#82bfd0}.wallet-hint{position:absolute;right:24px;top:65px;background:#16283a;border:1px solid var(--line);border-radius:9px;padding:8px 10px;color:#ffd9a1;font-size:11px;max-width:290px}
-main{max-width:1240px;margin:auto;padding:36px 24px 64px}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:8px 0 25px}.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:2px;font-weight:800;text-transform:uppercase}.hero h1{font:700 clamp(32px,5vw,50px)/1.05 "Space Grotesk";letter-spacing:-1.8px;margin:12px 0}.hero p{max-width:680px;color:var(--muted);font-size:14px;line-height:1.7;margin:0}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.primary-link,.quiet-link{padding:11px 14px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}.primary-link{background:linear-gradient(130deg,#6859c7,#287f91);border:1px solid #8b8ae3}.quiet-link{background:#101c2b;border:1px solid var(--line);color:#d4dfeb}
-.status-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px 0}.stat{background:linear-gradient(145deg,#132338,#0e1927);border:1px solid var(--line);border-radius:14px;padding:15px 16px;min-height:82px}.stat-label{color:#91a6bd;font-size:10px;text-transform:uppercase;letter-spacing:1.2px}.stat-value{font:600 16px "Space Grotesk";margin-top:8px}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e4af62;margin-right:7px;box-shadow:0 0 12px #e4af6266}.status-dot.ok{background:var(--mint);box-shadow:0 0 12px #68d9ad66}.status-dot.bad{background:var(--red);box-shadow:0 0 12px #f18b9166}
-.section-title{font:700 20px "Space Grotesk";letter-spacing:-.4px;margin:0}.section-copy{color:var(--muted);font-size:12px;line-height:1.6;margin:6px 0 0}.workspace{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.8fr);gap:16px;align-items:start}
-.panel{background:linear-gradient(145deg,#111f30ed,#0e1927ed);border:1px solid var(--line);border-radius:18px;padding:21px;box-shadow:0 18px 50px #0002}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}.live-tag{font-size:10px;color:#85e0bd;background:#12382f;border:1px solid #28604f;border-radius:30px;padding:6px 9px;white-space:nowrap}
-.model-list{display:grid;gap:10px}.model-card{border:1px solid #293d52;background:#0e1a29;border-radius:13px;padding:14px 15px;transition:border-color .15s,transform .15s}.model-card:hover{border-color:#527d95;transform:translateY(-1px)}.model-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.model-name{font:600 14px "Space Grotesk";overflow-wrap:anywhere}.model-sub{color:#8ea2b8;font-size:10px;margin-top:4px}.model-id{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#94dce4;overflow-wrap:anywhere;margin-top:8px}.model-badge{font-size:9px;padding:5px 8px;border:1px solid #285746;background:#11382d;color:#81e1b8;border-radius:20px;white-space:nowrap}.model-facts{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.fact{font-size:10px;color:#b3c2d2;background:#16263a;border:1px solid #263b52;border-radius:7px;padding:5px 7px}.model-price{color:#d7e2ee;font-size:11px;margin-top:10px;line-height:1.55}.model-price strong{color:#fff}.empty{border:1px dashed #344b62;border-radius:12px;padding:23px;color:#9dafc3;font-size:12px;text-align:center}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{color:#b8c7d8;font-size:11px;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid #2e435a;background:#0a1522;color:#eff5fb;border-radius:10px;padding:11px 12px;font-size:12px;outline:none}.field textarea{min-height:112px;resize:vertical;line-height:1.55}.field input:focus,.field select:focus,.field textarea:focus{border-color:#5c9aab;box-shadow:0 0 0 3px #57d8e81b}.field small{font-size:10px;color:#879bb1;line-height:1.5}.run-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px}.run-btn{border:1px solid #7e7dd0;background:linear-gradient(125deg,#6659be,#267987);color:#fff;border-radius:10px;padding:11px 15px;font-weight:800;font-size:12px}.run-btn:hover{filter:brightness(1.1)}.run-btn:disabled{opacity:.55;cursor:wait}.spend-note{font-size:10px;color:#a9b7c7;line-height:1.5;text-align:right;max-width:210px}
-.result{display:none;margin-top:18px;border:1px solid #2d465a;background:#0a1522;border-radius:13px;padding:15px}.result.visible{display:block}.result-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.result-title{font:600 12px "Space Grotesk";color:#d8e8f5}.result-meta{color:#8ca2b8;font-size:10px;text-align:right}.result-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#e2eaf3;font-size:12px;line-height:1.7}.receipt-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #26384d;margin-top:12px;padding-top:10px;color:#a9bdd0;font-size:10px}.receipt-state{color:#9fcfbd;font-weight:700}.receipt-check{background:#16273a;border:1px solid #3b536c;color:#e4edf6;border-radius:8px;padding:7px 9px;font-size:10px}.alert{display:none;margin-top:12px;border:1px solid #6d4e4d;background:#2a1d23;border-radius:10px;padding:10px 12px;color:#ffd4d2;font-size:11px;line-height:1.5}.alert.visible{display:block}
-.market-callout{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-top:16px;padding:19px 21px;border-radius:16px;border:1px solid #4b5d8a;background:linear-gradient(110deg,#27284c,#113747);box-shadow:0 12px 36px #14274a55}.market-callout h2{font:700 17px "Space Grotesk";margin:0}.market-callout p{font-size:11px;line-height:1.6;color:#bac9da;margin:6px 0 0;max-width:670px}.fineprint{margin:18px 0 0;color:#8194aa;font-size:10px;line-height:1.6}.footer{margin-top:32px;padding-top:15px;border-top:1px solid #25374a;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:#8194aa;font-size:10px}.footer a{color:#9edce4;text-decoration:none}
-@media(max-width:850px){.status-strip{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.hero-actions{margin-top:3px}}
-@media(max-width:590px){.topbar{height:62px;padding:0 14px;gap:10px}.brand{font-size:13px}.brand-icon{width:31px;height:31px}.navlinks{gap:10px}.navlinks a{font-size:10px}.wallet-select{max-width:100px;padding:8px 5px}.wallet-btn{padding:8px 9px;font-size:10px}.navlinks .docs-link{display:none}main{padding:26px 14px 45px}.status-strip{gap:8px}.stat{padding:12px;min-height:75px}.stat-value{font-size:13px}.panel{padding:16px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.run-row{align-items:flex-start;flex-direction:column}.spend-note{text-align:left}.market-callout{grid-template-columns:1fr}.market-callout .primary-link{width:max-content}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b14">
+  <meta name="description" content="FLOP AI Assistant — chat connected to FLOP DevNet with a bounded server-side credential.">
+  <title>FLOP AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#090b14;--panel:#101321;--panel2:#151a2b;--line:#252b40;--text:#f4f5fb;--muted:#9299b2;--purple:#8b6cff;--cyan:#57d8e8;--green:#54d6a0}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -10%,#25204a 0,transparent 42%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+    button,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:270px 1fr;max-width:1600px;margin:auto}
+    aside{border-right:1px solid var(--line);padding:25px 18px;display:flex;flex-direction:column;gap:24px;background:rgba(10,12,22,.76)}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 8px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--purple),#4d9cf7);display:grid;place-items:center;box-shadow:0 8px 28px #7359ed55}.logo svg{width:23px}
+    .brand-name{font:700 17px "Space Grotesk";letter-spacing:-.5px}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.7px;margin-top:2px}
+    .new-chat{width:100%;border:1px solid #6452bb;background:#211b3e;color:#fff;padding:12px 14px;border-radius:12px;text-align:left;font-weight:600;display:flex;gap:10px;align-items:center}
+    .market-nav{display:flex;align-items:center;gap:11px;padding:12px;border-radius:12px;text-decoration:none;background:linear-gradient(125deg,#3a306c,#1b5365);border:1px solid #8274ce;box-shadow:0 8px 28px #6253ca35;color:#fff;transition:.18s}.market-nav:hover{transform:translateY(-1px);border-color:#b4a8ff;box-shadow:0 10px 32px #6253ca55}.market-nav-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#ffffff1c;font-size:18px}.market-nav strong{display:block;font-size:12px}.market-nav small{display:block;margin-top:2px;color:#d3d0ef;font-size:10px}.market-top-link{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:10px;border:1px solid #8171d0;background:linear-gradient(120deg,#3a306c,#1b5365);color:#fff;text-decoration:none;font-size:11px;font-weight:800;white-space:nowrap}.market-top-link:hover{filter:brightness(1.15)}
+    .side-label{font-size:10px;color:#727b98;letter-spacing:1.7px;text-transform:uppercase;padding:0 9px}
+    .history{display:flex;flex-direction:column;gap:5px;overflow:auto}.history button{background:transparent;border:0;color:#aeb4ca;text-align:left;padding:10px;border-radius:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.history button:hover{background:var(--panel2);color:#fff}
+    .side-bottom{margin-top:auto}.network-card{border:1px solid var(--line);background:linear-gradient(145deg,#171a2c,#111522);border-radius:14px;padding:14px}.network-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}.dot{width:8px;height:8px;background:#e0ad54;border-radius:50%;box-shadow:0 0 12px #e0ad5480}.network-card p{font-size:11px;line-height:1.55;color:var(--muted);margin:9px 0 0}
+    main{display:flex;flex-direction:column;min-width:0;min-height:100vh}.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px}.top-title{font:600 14px "Space Grotesk";color:#dfe2f1}.top-right{display:flex;align-items:center;gap:12px}.pill{border:1px solid var(--line);background:#121625;color:#c6cbe0;border-radius:30px;padding:7px 11px;font-size:11px;display:flex;gap:7px;align-items:center}.pill .tiny{width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .chat-wrap{width:min(900px,100%);margin:0 auto;flex:1;display:flex;flex-direction:column;padding:44px 28px 22px}.welcome{margin:auto 0 30px;text-align:center}.orb{width:66px;height:66px;margin:0 auto 22px;border-radius:23px;background:linear-gradient(135deg,#8b6cff,#3e9de5);display:grid;place-items:center;box-shadow:0 15px 55px #7659ef55}.orb svg{width:34px}.eyebrow{color:#a99aff;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700}.welcome h1{font:700 clamp(30px,5vw,48px) "Space Grotesk";letter-spacing:-2px;margin:12px 0 10px}.gradient{background:linear-gradient(90deg,#b59cff,#65d9ee);-webkit-background-clip:text;background-clip:text;color:transparent}.welcome p{color:var(--muted);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto}
+    .suggestions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:650px;margin:27px auto 0}.suggestion{border:1px solid var(--line);background:#111625;border-radius:13px;padding:13px 15px;text-align:left;color:#d9ddef;font-size:12px;line-height:1.5;transition:.2s}.suggestion:hover{border-color:#7663d7;background:#191a31;transform:translateY(-2px)}.suggestion b{display:block;color:#fff;font-size:12px;margin-bottom:3px}
+    .messages{display:flex;flex-direction:column;gap:20px;margin-bottom:24px}.message{display:flex;gap:12px;max-width:88%;animation:rise .22s ease}.message.user{align-self:flex-end;flex-direction:row-reverse}.avatar{width:31px;height:31px;flex:0 0 31px;border-radius:11px;display:grid;place-items:center;background:#24213f;color:#c2b4ff;font-size:11px;font-weight:700}.user .avatar{background:#193646;color:#8de8f1}.bubble{padding:13px 16px;border:1px solid var(--line);background:#121726;border-radius:4px 15px 15px 15px;font-size:13px;line-height:1.75;color:#e4e7f4;white-space:pre-wrap;overflow-wrap:anywhere}.user .bubble{background:#211d3a;border-color:#39305e;border-radius:15px 4px 15px 15px}.message.error .bubble{border-color:#74434b;color:#ffc1c8}.typing{display:flex;gap:5px;padding:5px}.typing i{width:6px;height:6px;background:#a89aff;border-radius:50%;animation:blink 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+    .composer-area{margin-top:auto}.composer{border:1px solid #343953;background:#111625;border-radius:17px;padding:12px 13px 10px;box-shadow:0 14px 50px #0005}.composer:focus-within{border-color:#7865d9;box-shadow:0 0 0 3px #7865d91c}.composer textarea{display:block;width:100%;resize:none;min-height:48px;max-height:160px;border:0;outline:0;background:transparent;color:#fff;padding:7px 8px;font-size:14px;line-height:1.5}.composer textarea::placeholder{color:#707993}.composer-foot{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 0}.hint{font-size:10px;color:#7e87a1}.send{border:0;background:linear-gradient(135deg,#8b6cff,#5a86ef);color:#fff;border-radius:11px;padding:9px 15px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px}.send:disabled{opacity:.5;cursor:not-allowed}.disclaimer{text-align:center;color:#68718c;font-size:10px;margin:11px 0 0}.mobile-brand{display:none}
+    .identity-panel{width:min(900px,calc(100% - 56px));margin:18px auto 0;padding:15px 17px;border:1px solid #2e3550;border-radius:14px;background:linear-gradient(135deg,#15172a,#101725);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+    .identity-title{font:600 13px "Space Grotesk";display:flex;align-items:center;gap:8px}.identity-title .dot{background:var(--cyan);box-shadow:0 0 12px #57d8e880}
+    .identity-copy{font-size:11px;line-height:1.55;color:var(--muted);margin:6px 0 0}.identity-copy code{color:#c9c1ff;overflow-wrap:anywhere}
+    .identity-controls{display:flex;gap:8px;align-items:center}.identity-controls textarea{width:260px;min-height:42px;max-height:90px;resize:vertical;border:1px solid var(--line);border-radius:9px;background:#0c101c;color:var(--text);padding:9px;font:12px "DM Sans",sans-serif}
+    .identity-button{border:1px solid #6257a4;background:#252044;color:#fff;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:700;white-space:nowrap}.identity-button.secondary{background:#121a2a;border-color:#344158}.identity-button:disabled{opacity:.5;cursor:not-allowed}
+    .identity-account-select{max-width:220px;border:1px solid var(--line);border-radius:9px;background:#0c101c;color:var(--text);padding:9px;font-size:11px}.identity-account-select[hidden]{display:none}
+    .identity-foot{grid-column:1/-1;color:#78829d;font-size:10px;line-height:1.5}.identity-foot a{color:#a99aff}
+    @media(max-width:760px){.identity-panel{width:calc(100% - 28px);grid-template-columns:1fr;margin-top:12px;padding:13px}.identity-controls{flex-direction:column;align-items:stretch}.identity-controls textarea{width:100%}.identity-controls button{width:100%}.identity-foot{grid-column:auto}}
+    @keyframes blink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    @media(max-width:760px){.market-top-link{padding:8px;font-size:10px}.top-right{gap:7px}.app{grid-template-columns:1fr}aside{display:none}.topbar{height:62px;padding:0 17px}.mobile-brand{display:flex;align-items:center;gap:8px;font:700 14px "Space Grotesk"}.mobile-brand .logo{width:30px;height:30px;border-radius:10px}.top-title{display:none}.chat-wrap{padding:30px 16px 18px}.welcome{margin:auto 0 25px}.suggestions{grid-template-columns:1fr}.message{max-width:96%}.pill{font-size:10px}}
+    .wallet-connect-btn{border:1px solid #8171d0;background:linear-gradient(135deg,#7464dc,#397f99);color:#fff;border-radius:11px;padding:9px 13px;font:700 11px "DM Sans",sans-serif;white-space:nowrap;box-shadow:0 5px 18px #5742b533;transition:.18s}.wallet-connect-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.wallet-connect-btn:disabled{opacity:.65;cursor:wait}.wallet-account-select{max-width:170px;border:1px solid var(--line);background:#121625;color:#e7eaf6;border-radius:10px;padding:8px 9px;font:500 10px "DM Sans",sans-serif}
+    @media(max-width:760px){.pill{display:none}.topbar{gap:7px}.top-right{gap:6px;min-width:0}.market-top-link{font-size:0;padding:8px 9px}.market-top-link span{font-size:14px}.wallet-connect-btn{padding:8px 9px;font-size:10px}.wallet-account-select{max-width:110px;padding:7px;font-size:9px}}
+    .message-meta{margin-top:8px;padding-top:7px;border-top:1px solid #ffffff17;color:#8ea2b8;font-size:10px;line-height:1.4}
+  </style>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="/"><span class="brand-icon" aria-hidden="true">✦</span><span>FLOP Market Desk</span></a>
-  <nav class="navlinks" aria-label="Main navigation">
-    <a href="/markets.html">Forecasts</a>
-    <a class="docs-link" href="https://docs.flop.network/docs/agent-integration" target="_blank" rel="noreferrer">FLOP docs ↗</a>
-    <a class="docs-link" href="https://explorer.devnet.flop.network/" target="_blank" rel="noreferrer">Explorer ↗</a>
-  </nav>
-  <div class="wallet-tools"><select id="walletAccountSelect" class="wallet-select" aria-label="Choose wallet account" hidden></select><button id="connectWallet" class="wallet-btn" type="button">Connect wallet</button></div>
-  <span id="walletHint" class="wallet-hint" role="status" hidden></span>
-</header>
-<main>
-  <section class="hero">
-    <div>
-      <div class="eyebrow">FLOP Network · DevNet</div>
-      <h1>Research the market.<br><span style="color:#8edbe5">See the network behind it.</span></h1>
-      <p>Build a balanced research brief for a crypto forecast using evidence you provide. The report runs through a FLOP model and shows its usage and receipt status. Public model and pricing data are available below.</p>
-    </div>
-    <div class="hero-actions"><a class="primary-link" href="/markets.html">Open community forecasts ↗</a><a class="quiet-link" href="https://api.flop.network/v1/models" target="_blank" rel="noreferrer">Live model catalog ↗</a></div>
-  </section>
+<div class="app">
+  <aside>
+    <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/><path d="m18.5 2 .8 2.7L22 5.5l-2.7.8-.8 2.7-.8-2.7-2.7-.8 2.7-.8.8-2.7Z" fill="white"/></svg></div><div><div class="brand-name">FLOP AI</div><div class="brand-sub">INTELLIGENCE ASSISTANT</div></div></div>
+    <button class="new-chat" id="newChat"><span>＋</span> New conversation</button>
+    <a class="market-nav" href="/markets.html"><span class="market-nav-icon">↗</span><span><strong>Prediction Market</strong><small>Community forecasts & points</small></span></a>
+    <div class="side-label">Recent conversations</div><div class="history" id="history"><div style="padding:10px;color:#6f7891;font-size:12px">Your chats appear here.</div></div>
+    <div class="side-bottom"><div class="network-card"><div class="network-top"><span class="dot" id="connectionDot"></span><span id="connectionLabel">Checking FLOP DevNet…</span></div><p id="connectionText">Checking FLOP DevNet health and chat configuration.</p></div></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <div class="mobile-brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/></svg></div>FLOP AI Assistant</div>
+      <div class="top-title">Your intelligent workspace</div>
+      <div class="top-right"><a class="market-top-link" href="/markets.html">Prediction Market <span aria-hidden="true">↗</span></a><div class="pill" id="providerPill"><span class="tiny"></span> Checking FLOP DevNet…</div><select class="wallet-account-select" id="walletAccountSelect" aria-label="Choose wallet account" hidden></select><button class="wallet-connect-btn" id="connectWallet" type="button">Connect wallet</button></div>
+    </header>
 
-  <section class="status-strip" aria-label="Live FLOP status">
-    <div class="stat"><div class="stat-label">Gateway</div><div class="stat-value"><span class="status-dot" id="gatewayDot"></span><span id="gatewayStatus">Checking…</span></div></div>
-    <div class="stat"><div class="stat-label">Network</div><div class="stat-value" id="networkStatus">—</div></div>
-    <div class="stat"><div class="stat-label">Ready models</div><div class="stat-value" id="modelCount">—</div></div>
-    <div class="stat"><div class="stat-label">Updated</div><div class="stat-value" id="updatedAt">—</div></div>
-  </section>
-
-  <section class="workspace">
-    <div class="panel">
-      <div class="panel-head"><div><h2 class="section-title">Live model directory</h2><p class="section-copy">Current models and FLOP-native price terms from the public gateway catalog.</p></div><span class="live-tag">Public data</span></div>
-      <div class="model-list" id="modelList"><div class="empty">Loading current model offers…</div></div>
-      <div class="form-grid">
-        <div class="field"><label for="estimateModel">Estimate with model</label><select id="estimateModel" disabled><option>Loading models…</option></select></div>
-        <div class="field"><label for="promptTokens">Estimated input tokens</label><input id="promptTokens" type="number" min="1" max="20000" value="300"></div>
-        <div class="field"><label for="completionTokens">Estimated output tokens</label><input id="completionTokens" type="number" min="1" max="8192" value="200"></div>
-        <div class="field"><label>Estimated FLOP cost</label><div class="fact" id="estimateValue" aria-live="polite">Waiting for live price data…</div><small id="estimateNote">Estimate only. Actual usage depends on the completed request and its receipt.</small></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head"><div><h2 class="section-title">Build a research brief</h2><p class="section-copy">Choose a task, ask one focused question, and provide the source notes. The model is instructed not to invent current prices or sources.</p></div><span class="live-tag">FLOP inference</span></div>
-      <form id="researchForm">
-        <div class="form-grid">
-          <div class="field"><label for="asset">Asset</label><select id="asset"><option>BTC</option><option>ETH</option><option>SOL</option><option>XRP</option><option>BNB</option><option>DOGE</option></select></div>
-          <div class="field"><label for="researchTask">Brief type</label><select id="researchTask"><option value="evidence">Evidence summary</option><option value="scenarios">Bull and bear scenarios</option><option value="risk">Risk and uncertainty check</option></select></div>
-          <div class="field full"><label for="researchQuestion">Forecast question</label><input id="researchQuestion" maxlength="220" value="Will BTC finish this week above its previous Sunday close?"></div>
-          <div class="field full"><label for="evidence">Evidence notes and source links</label><textarea id="evidence" maxlength="1600" required placeholder="Paste the source excerpts, figures, and links you want the model to consider. The app does not fetch the linked pages."></textarea><small>Use public, non-sensitive material. The text you submit is sent to FLOP for inference. Don’t include wallet secrets or private account data.</small></div>
+    <section aria-label="Community prediction market" style="width:min(900px,calc(100% - 56px));margin:0 auto;padding:15px 18px;border:1px solid #3b3761;border-radius:14px;background:linear-gradient(120deg,#1d1b38,#111b2a);display:flex;justify-content:space-between;align-items:center;gap:16px">
+      <div><div style="font:600 13px &quot;Space Grotesk&quot;;color:#eee">Crypto Forecasts</div><p style="font-size:11px;line-height:1.5;color:#9299b2;margin:5px 0 0">Make a weekly forecast on BTC, ETH, SOL and more. Free to use; signed forecast proofs are public on Technocore.</p></div>
+      <a href="/markets.html" style="flex:0 0 auto;border:1px solid #6659aa;background:#252044;color:#fff;border-radius:9px;padding:10px 13px;font-size:11px;font-weight:700;text-decoration:none">Explore markets ↗</a>
+    </section>
+    <section class="chat-wrap">
+      <div class="welcome" id="welcome">
+        <div class="orb"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.8 14.2 9.8 21.2 12l-7 2.2-2.2 7-2.2-7L2.8 12l7-2.2L12 2.8Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="m18.5 2 .8 2.7L22 5.5l-2.7.8-.8 2.7-.8-2.7-2.7-.8 2.7-.8.8-2.7Z" fill="white"/></svg></div>
+        <div class="eyebrow">Powered by curiosity</div><h1>Ask anything.<br><span class="gradient">Explore everything.</span></h1>
+        <p>Your AI assistant for everyday questions, learning, Web3 research and creative thinking. What would you like to explore today?</p>
+        <div class="suggestions">
+          <button class="suggestion" data-prompt="Explain blockchain in simple terms."><b>◇ Learn something</b>Explain blockchain in simple terms</button>
+          <button class="suggestion" data-prompt="Help me research a Web3 project. What should I investigate?"><b>⌘ Explore Web3</b>Research a crypto project safely</button>
+          <button class="suggestion" data-prompt="Give me five creative ideas for a useful AI application."><b>✳ Get creative</b>Brainstorm a useful AI app</button>
+          <button class="suggestion" data-prompt="Help me write a clear and engaging announcement for a new project."><b>✎ Write better</b>Draft a project announcement</button>
         </div>
-        <div class="run-row"><button id="runResearch" class="run-btn" type="submit">Generate research brief</button><span class="spend-note">Submits one real DevNet inference request. Each brief is capped at 5 FLOP and uses the site’s shared FLOP allowance. This quota is not a reward.</span></div>
-      </form>
-      <div class="alert" id="researchAlert" role="alert"></div>
-      <div class="result" id="researchResult" aria-live="polite">
-        <div class="result-head"><div class="result-title">FLOP research brief</div><div class="result-meta" id="resultMeta"></div></div>
-        <div class="result-body" id="resultBody"></div>
-        <div class="receipt-row"><span>Gateway receipt: <span class="receipt-state" id="receiptState">Checking…</span></span><button class="receipt-check" id="checkReceipt" type="button">Check receipt</button></div>
       </div>
-    </div>
-  </section>
-
-  <section class="market-callout">
-    <div><h2>Community forecast board</h2><p>Vote on curated BTC, ETH, SOL, XRP, BNB and DOGE forecasts. Wallet-signed predictions are recorded in Technocore; they are not FLOP chain transactions and carry no guaranteed reward.</p></div>
-    <a class="primary-link" href="/markets.html">Explore forecasts ↗</a>
-  </section>
-
-  <p class="fineprint">Market briefs are educational summaries of the evidence you submit, not investment advice. Estimates are based on the current public catalog and may change. DevNet activity earns no rewards or airdrop weight; only follow the final official Testnet rules.</p>
-  <footer class="footer"><span>FLOP Market Desk · public data from the FLOP gateway</span><span><a href="https://api.flop.network/health" target="_blank" rel="noreferrer">Health API</a> · <a href="https://api.flop.network/openapi.json" target="_blank" rel="noreferrer">OpenAPI</a> · <a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Technocore records</a></span></footer>
-</main>
+      <div class="messages" id="messages" aria-live="polite"></div>
+      <div class="composer-area">
+        <div class="composer"><textarea id="prompt" rows="1" placeholder="Message FLOP AI Assistant..." aria-label="Your message"></textarea><div class="composer-foot"><span class="hint">Enter to send · Shift + Enter for a new line</span><button class="send" id="send">Send <span>➤</span></button></div></div>
+        <div class="disclaimer">FLOP DevNet chat uses the site’s shared, bounded allowance (up to 5 FLOP per request). DevNet use is for testing and earns no rewards. Verify important information independently.</div>
+      </div>
+    </section>
+  </main>
+</div>
 <script>
 (() => {
-  const $ = id => document.getElementById(id);
-  let modelData = [];
-  let configuredModel = "";
-  let currentRequestId = "";
-  const WALLET_STORE = "flop-wallet-v1";
+  const messagesEl = document.getElementById('messages');
+  const promptEl = document.getElementById('prompt');
+  const sendBtn = document.getElementById('send');
+  const welcome = document.getElementById('welcome');
+  const historyEl = document.getElementById('history');
+  const STORE = 'flop-ai-conversations-v1';
+  let conversations = [];
+  let current = [];
+  let busy = false;
+  const connectWalletBtn = document.getElementById('connectWallet');
+  const walletAccountSelect = document.getElementById('walletAccountSelect');
+  const WALLET_STORE = 'flop-wallet-v1';
   let walletChoices = [];
-  const walletButton = $("connectWallet");
-  const walletSelect = $("walletAccountSelect");
-  const walletHint = $("walletHint");
-
-  const shortAddress = address => address ? address.slice(0, 8) + "…" + address.slice(-5) : "";
+  let walletAccount = null;
+  let walletSigner = null;
+  function shortWallet(address) { return address ? address.slice(0, 8) + '…' + address.slice(-5) : ''; }
   function saveWallet(choice) {
-    try { localStorage.setItem(WALLET_STORE, JSON.stringify({source:choice.source,address:choice.account.address,type:choice.account.type || ""})); } catch {}
+    try {
+      localStorage.setItem(WALLET_STORE, JSON.stringify({
+        source: choice.source, address: choice.account.address, type: choice.account.type || ''
+      }));
+    } catch {}
   }
-  function paintWallet(choice) {
-    walletButton.textContent = choice ? ((choice.account.type || "account").toUpperCase() + " · " + shortAddress(choice.account.address)) : "Connect wallet";
-    walletButton.title = choice ? "Wallet connected. Select to refresh access." : "Connect a Polkadot-compatible wallet";
+  function updateWalletButton(choice) {
+    connectWalletBtn.textContent = choice
+      ? (String(choice.account.type || 'wallet').toUpperCase() + ' · ' + shortWallet(choice.account.address))
+      : 'Connect wallet';
+    connectWalletBtn.title = choice ? 'Wallet connected. Click to refresh wallet access.' : 'Connect a Polkadot-compatible wallet';
+    connectWalletBtn.setAttribute('aria-label', choice ? 'Connected wallet ' + shortWallet(choice.account.address) : 'Connect wallet');
   }
   async function connectWallet(preferred = null, quiet = false) {
-    if (!quiet) walletButton.disabled = true;
+    if (!quiet) connectWalletBtn.disabled = true;
     try {
       const injected = window.injectedWeb3 || {};
-      const entries = preferred?.source && injected[preferred.source] ? [[preferred.source,injected[preferred.source]]] : Object.entries(injected);
+      const entries = preferred?.source && injected[preferred.source]
+        ? [[preferred.source, injected[preferred.source]]]
+        : Object.entries(injected);
       walletChoices = [];
-      for (const [source,extension] of entries) {
-        if (typeof extension?.enable !== "function") continue;
+      for (const [source, extension] of entries) {
+        if (typeof extension?.enable !== 'function') continue;
         try {
-          const api = await extension.enable("FLOP Market Desk");
+          const api = await extension.enable('FLOP AI Assistant');
           const accounts = await api?.accounts?.get?.();
-          if (typeof api?.signer?.signRaw === "function") for (const account of accounts || []) walletChoices.push({account,signer:api.signer,source});
+          if (typeof api?.signer?.signRaw === 'function') {
+            for (const account of accounts || []) walletChoices.push({ account, signer: api.signer, source });
+          }
         } catch {}
       }
-      if (!walletChoices.length) throw new Error("No wallet account was shared. Unlock your wallet extension and try again.");
-      walletSelect.replaceChildren();
-      walletChoices.forEach((choice,index) => { const option=document.createElement("option"); option.value=String(index); option.textContent=shortAddress(choice.account.address)+" · "+(choice.account.type || "account"); walletSelect.appendChild(option); });
-      const preferredIndex=walletChoices.findIndex(choice=>choice.account.address===preferred?.address&&(!preferred?.source||choice.source===preferred.source));
-      const chosenIndex=preferredIndex>=0?preferredIndex:0;
-      walletSelect.value=String(chosenIndex); walletSelect.hidden=walletChoices.length<2;
-      const selected=walletChoices[chosenIndex]; saveWallet(selected); paintWallet(selected); walletHint.hidden=true;
-    } catch (error) {
-      if (!quiet) { walletHint.textContent=error.message || "Could not connect wallet."; walletHint.hidden=false; }
-    } finally { if (!quiet) walletButton.disabled=false; }
-  }
-  walletButton.addEventListener("click",()=>connectWallet());
-  walletSelect.addEventListener("change",()=>{const selected=walletChoices[Number(walletSelect.value)];if(selected){saveWallet(selected);paintWallet(selected);}});
-  try { const saved=JSON.parse(localStorage.getItem(WALLET_STORE)||"null"); if(saved?.source&&saved?.address) connectWallet(saved,true); } catch {}
-
-  const fmtTime = value => {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? "—" : date.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-  };
-  const fmtAmount = value => {
-    if (!Number.isFinite(value)) return "—";
-    return value.toLocaleString(undefined,{maximumFractionDigits:6});
-  };
-
-  function setStatus(health) {
-    const ok = health?.status === "ok" && health?.connected === true;
-    $("gatewayDot").className = "status-dot " + (ok ? "ok" : "bad");
-    $("gatewayStatus").textContent = ok ? "Live" : (health?.status || "Unavailable");
-    const network = health?.network;
-    $("networkStatus").textContent = network?.network ? network.network + " · " + network.status : "Unavailable";
-  }
-
-  function renderModels() {
-    const list = $("modelList"), selector = $("estimateModel");
-    list.replaceChildren(); selector.replaceChildren();
-    if (!modelData.length) {
-      list.innerHTML = '<div class="empty">No ready model offers were returned. Refresh later.</div>';
-      selector.disabled = true; $("estimateValue").textContent = "No live price";
-      return;
-    }
-    modelData.forEach(model => {
-      const card = document.createElement("article"); card.className="model-card";
-      const top = document.createElement("div"); top.className="model-top";
-      const info=document.createElement("div");
-      const title=document.createElement("div"); title.className="model-name"; title.textContent=model.name || model.id;
-      const subtitle=document.createElement("div"); subtitle.className="model-sub"; subtitle.textContent=(model.context_length ? model.context_length.toLocaleString()+" token context" : "Context length not reported");
-      const id=document.createElement("div"); id.className="model-id"; id.textContent=model.id;
-      info.append(title,subtitle,id);
-      const badge=document.createElement("span"); badge.className="model-badge"; badge.textContent="Ready offer";
-      top.append(info,badge); card.appendChild(top);
-      const facts=document.createElement("div"); facts.className="model-facts";
-      const capacity=model.x_flop?.measurements?.capacity_tpm?.value;
-      const cap=document.createElement("span"); cap.className="fact"; cap.textContent=Number.isFinite(capacity)?capacity.toLocaleString()+" admitted tok/min":"Capacity unavailable"; facts.appendChild(cap);
-      const limit=model.per_request_limits;
-      if(limit?.prompt_tokens){const f=document.createElement("span");f.className="fact";f.textContent="Input up to "+limit.prompt_tokens.toLocaleString();facts.appendChild(f);}
-      if(limit?.completion_tokens){const f=document.createElement("span");f.className="fact";f.textContent="Output up to "+limit.completion_tokens.toLocaleString();facts.appendChild(f);}
-      card.appendChild(facts);
-      const price=document.createElement("div"); price.className="model-price";
-      const estimate=priceRange(model,100,100);
-      price.innerHTML=estimate ? "Native estimate for 100 input + 100 output tokens: <strong>"+estimate+"</strong> FLOP" : "Native FLOP price data unavailable or expired.";
-      card.appendChild(price); list.appendChild(card);
-      const option=document.createElement("option"); option.value=model.id; option.textContent=model.name || model.id; selector.appendChild(option);
-    });
-    selector.disabled=false;
-    if (configuredModel && modelData.some(item => item.id === configuredModel)) selector.value=configuredModel;
-    updateEstimate();
-  }
-
-  function priceRange(model,inputTokens,outputTokens) {
-    const sources=(model.x_flop?.price_sources || []).filter(source => {
-      const expiry=Date.parse(source.expires_at || "");
-      return Number.isFinite(expiry) && expiry > Date.now();
-    });
-    const costs=sources.map(source => {
-      const flopPerGn=Number(source.flop_per_gn), inGn=Number(source.gn_per_prompt_token), outGn=Number(source.gn_per_completion_token);
-      if (![flopPerGn,inGn,outGn].every(Number.isFinite)) return null;
-      return inputTokens*flopPerGn*inGn + outputTokens*flopPerGn*outGn;
-    }).filter(value=>Number.isFinite(value)&&value>=0);
-    if (!costs.length) return null;
-    const low=Math.min(...costs), high=Math.max(...costs);
-    return Math.abs(high-low)<1e-12 ? fmtAmount(low) : fmtAmount(low)+"–"+fmtAmount(high);
-  }
-
-  function updateEstimate() {
-    const model=modelData.find(item=>item.id===$("estimateModel").value);
-    if (!model) { $("estimateValue").textContent="No live price"; return; }
-    const input=Number($("promptTokens").value), output=Number($("completionTokens").value);
-    if (!Number.isInteger(input)||!Number.isInteger(output)||input<1||output<1) { $("estimateValue").textContent="Enter positive token counts"; return; }
-    const limit=model.per_request_limits;
-    if ((limit?.prompt_tokens && input>limit.prompt_tokens)||(limit?.completion_tokens && output>limit.completion_tokens)) { $("estimateValue").textContent="Above this model’s request limit"; return; }
-    const estimate=priceRange(model,input,output);
-    $("estimateValue").textContent=estimate ? estimate+" FLOP (catalog estimate)" : "Live price terms unavailable";
-  }
-  $("estimateModel").addEventListener("change",updateEstimate);
-  $("promptTokens").addEventListener("input",updateEstimate);
-  $("completionTokens").addEventListener("input",updateEstimate);
-
-  async function loadData() {
-    $("gatewayStatus").textContent="Checking…";
-    try {
-      const responses=await Promise.all([fetch("/api/flop-data",{cache:"no-store"}),fetch("/api/status",{cache:"no-store"})]);
-      const response=responses[0];
-      const statusResponse=responses[1];
-      const data=await response.json();
-      const status=statusResponse.ok?await statusResponse.json():{};
-      configuredModel=typeof status.model==="string"?status.model:"";
-      if (data.health) setStatus(data.health); else setStatus(null);
-      modelData=Array.isArray(data.models)?data.models:[];
-      $("modelCount").textContent=modelData.length.toLocaleString();
-      $("updatedAt").textContent=fmtTime(data.fetchedAt || Date.now());
-      renderModels();
-      if (!response.ok && !data.health && !modelData.length) throw new Error(data.error || "Could not load FLOP data.");
-    } catch(error) {
-      $("gatewayDot").className="status-dot bad";
-      $("gatewayStatus").textContent="Unavailable";
-      $("networkStatus").textContent="Could not load";
-      $("modelCount").textContent="—";
-      $("updatedAt").textContent="—";
-      $("modelList").replaceChildren();
-      const message=document.createElement("div");message.className="empty";message.textContent=error.message || "Could not load current FLOP data."; $("modelList").appendChild(message);
-    }
-  }
-
-  function showAlert(message) { const el=$("researchAlert");el.textContent=message;el.classList.add("visible"); }
-  function hideAlert() { const el=$("researchAlert");el.textContent="";el.classList.remove("visible"); }
-
-  async function checkReceipt() {
-    if (!currentRequestId) return;
-    $("receiptState").textContent="Checking…";
-    $("checkReceipt").disabled=true;
-    try {
-      const response=await fetch("/api/research-receipt?requestId="+encodeURIComponent(currentRequestId),{cache:"no-store"});
-      const data=await response.json();
-      if (!response.ok) throw new Error(data.message || data.error || "Could not read the receipt.");
-      if (data.state==="not_found") {
-        $("receiptState").textContent="Not found yet";
-        showAlert(data.message || "No receipt returned yet. That does not prove the request was not processed; do not resubmit until its status is clear.");
-      } else {
-        const spend=data.settled_spend==null?"":" · "+fmtAmount(Number(data.settled_spend))+" FLOP settled";
-        const channel=data.channel_id?" · channel "+data.channel_id.slice(0,12)+"…":"";
-        $("receiptState").textContent=(data.state || "unknown") + spend + channel;
-        if (data.state==="settled"||data.state==="released") hideAlert();
-      }
-    } catch(error) {
-      $("receiptState").textContent="Unavailable";
-      showAlert(error.message || "Receipt status could not be checked.");
-    } finally { $("checkReceipt").disabled=false; }
-  }
-  $("checkReceipt").addEventListener("click",checkReceipt);
-
-  $("researchForm").addEventListener("submit",async event=>{
-    event.preventDefault(); hideAlert();
-    const run=$("runResearch"), evidence=$("evidence").value.trim(), question=$("researchQuestion").value.trim();
-    if (evidence.length<30) {showAlert("Add at least 30 characters of evidence or source notes before sending.");return;}
-    const selectedModel=$("estimateModel").value;
-    if (!selectedModel) {showAlert("No live model offer is available right now.");return;}
-    if (configuredModel && selectedModel!==configuredModel) {showAlert("The Vercel key is configured for "+configuredModel+". Select that model, or request a credential authorized for the model you want.");return;}
-    if (!configuredModel) {showAlert("No FLOP model is configured on the Vercel server. Set FLOP_MODEL_ID to a live model authorized for its key.");return;}
-    currentRequestId=crypto.randomUUID();
-    run.disabled=true;run.textContent="Sending to FLOP…";
-    $("researchResult").classList.add("visible");
-    $("resultBody").textContent="Building your structured research brief…";
-    $("resultMeta").textContent=selectedModel+" · request "+currentRequestId.slice(0,8)+"…";
-    $("receiptState").textContent="Awaiting request";
-    try {
-      const response=await fetch("/api/research",{
-        method:"POST",headers:{"content-type":"application/json"},
-        body:JSON.stringify({requestId:currentRequestId,model:selectedModel,asset:$("asset").value,task:$("researchTask").value,question,evidence})
+      if (!walletChoices.length) throw new Error('No wallet account was shared with this site. Unlock your Polkadot-compatible wallet, then connect again.');
+      walletAccountSelect.replaceChildren();
+      walletChoices.forEach((choice, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = shortWallet(choice.account.address) + ' · ' + (choice.account.type || 'account');
+        walletAccountSelect.appendChild(option);
       });
-      const data=await response.json();
-      if (!response.ok) {
-        $("resultBody").textContent="";
-        $("receiptState").textContent="Check status before retrying";
-        throw new Error(data.error || "FLOP could not complete the research request.");
-      }
-      $("resultBody").textContent=data.reply || "The model returned an empty brief.";
-      const usage=data.usage || {};
-      const used=usage.total_tokens==null?NaN:Number(usage.total_tokens);
-      const cost=usage.cost_flop==null?NaN:Number(usage.cost_flop);
-      const usageText=Number.isFinite(used) ? " · "+used.toLocaleString()+" tokens" : "";
-      const costText=Number.isFinite(cost) ? " · "+fmtAmount(cost)+" FLOP reported" : "";
-      $("resultMeta").textContent=(data.model || selectedModel)+usageText+costText;
-      $("receiptState").textContent="Checking…";
-      await checkReceipt();
-    } catch(error) {
-      $("resultBody").textContent="";
-      showAlert(error.message || "FLOP request failed. Check the receipt before trying again.");
-    } finally {run.disabled=false;run.textContent="Generate research brief";}
+      const preferredIndex = walletChoices.findIndex(choice =>
+        choice.account.address === preferred?.address && (!preferred?.source || choice.source === preferred.source)
+      );
+      const edIndex = walletChoices.findIndex(choice => String(choice.account.type || '').toLowerCase() === 'ed25519');
+      walletAccountSelect.value = String(preferredIndex >= 0 ? preferredIndex : edIndex >= 0 ? edIndex : 0);
+      walletAccountSelect.hidden = walletChoices.length < 2;
+      const selected = walletChoices[Number(walletAccountSelect.value)];
+      walletAccount = selected.account; walletSigner = selected.signer;
+      saveWallet(selected); updateWalletButton(selected);
+    } catch (error) {
+      if (!quiet) { updateWalletButton(null); connectWalletBtn.title = error.message || 'Could not connect wallet.'; }
+    } finally {
+      if (!quiet) connectWalletBtn.disabled = false;
+    }
+  }
+  connectWalletBtn.addEventListener('click', () => connectWallet());
+  walletAccountSelect.addEventListener('change', () => {
+    const selected = walletChoices[Number(walletAccountSelect.value)];
+    walletAccount = selected?.account || null; walletSigner = selected?.signer || null;
+    if (selected) { saveWallet(selected); updateWalletButton(selected); }
   });
-
-  loadData();
+  try {
+    const savedWallet = JSON.parse(localStorage.getItem(WALLET_STORE) || 'null');
+    if (savedWallet?.address && savedWallet?.source) connectWallet(savedWallet, true);
+  } catch {}
+  try { conversations = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch { conversations = []; }
+  function save() { localStorage.setItem(STORE, JSON.stringify(conversations.slice(0,20))); renderHistory(); }
+  function renderHistory() {
+    historyEl.innerHTML = '';
+    if (!conversations.length) { historyEl.innerHTML = '<div style="padding:10px;color:#6f7891;font-size:12px">Your chats appear here.</div>'; return; }
+    conversations.slice(0,12).forEach((c, i) => {
+      const b = document.createElement('button'); b.textContent = c.title || 'New conversation';
+      b.onclick = () => { current = c.messages.slice(); renderMessages(); }; historyEl.appendChild(b);
+    });
+  }
+  function addMessage(role, content, error=false) {
+    const wrap = document.createElement('div'); wrap.className = `message ${role}${error?' error':''}`;
+    const avatar = document.createElement('div'); avatar.className = 'avatar'; avatar.textContent = role === 'user' ? 'YOU' : 'AI';
+    const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = content;
+    wrap.append(avatar,bubble); messagesEl.appendChild(wrap); messagesEl.scrollIntoView({block:'end',behavior:'smooth'});
+    return wrap;
+  }
+  function renderMessages() {
+    messagesEl.innerHTML = '';
+    welcome.style.display = current.length ? 'none' : '';
+    current.forEach(m => addMessage(m.role, m.content));
+  }
+  function persist() {
+    if (!current.length) return;
+    const title = (current.find(m=>m.role==='user')?.content || 'New conversation').slice(0,48);
+    const existing = conversations.findIndex(c => c.messages === current);
+    const item = {title, messages: current.slice()};
+    conversations = [item, ...conversations.filter(c => c.title !== title)].slice(0,20);
+    save();
+  }
+  async function send() {
+    const text = promptEl.value.trim(); if (!text || busy) return;
+    busy = true; sendBtn.disabled = true; promptEl.value = ''; promptEl.style.height = 'auto';
+    welcome.style.display = 'none'; current.push({role:'user',content:text}); addMessage('user',text);
+    const loading = document.createElement('div'); loading.className='message assistant'; loading.innerHTML='<div class="avatar">AI</div><div class="bubble"><div class="typing"><i></i><i></i><i></i></div></div>'; messagesEl.appendChild(loading);
+    let requestId = '';
+    try {
+      requestId = crypto.randomUUID();
+      const response = await fetch('/api/chat', {
+        method:'POST', headers:{'Content-Type':'application/json','X-Request-ID':requestId},
+        body:JSON.stringify({messages:current.slice(-24),requestId})
+      });
+      const data = await response.json();
+      loading.remove();
+      if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
+      const answer = data.reply || 'The model returned an empty response.';
+      current.push({role:'assistant',content:answer});
+      const assistantMessage = addMessage('assistant',answer);
+      const meta = document.createElement('div');
+      meta.className = 'message-meta';
+      meta.textContent = 'FLOP DevNet · ' + (data.model || 'configured model') +
+        (data.usage?.cost_flop == null ? '' : ' · ' + Number(data.usage.cost_flop).toLocaleString() + ' FLOP reported');
+      assistantMessage.querySelector('.bubble').appendChild(meta);
+      persist();
+    } catch (err) {
+      loading.remove();
+      const message = (err.message || 'Something went wrong.') + '\nRequest ID: ' + requestId +
+        '\nIf the outcome is uncertain, check /api/chat-receipt?requestId=' + encodeURIComponent(requestId) + ' before retrying.';
+      addMessage('assistant',message,true);
+      current.push({role:'assistant',content:message});
+    } finally { busy=false; sendBtn.disabled=false; promptEl.focus(); }
+  }
+  sendBtn.addEventListener('click',send);
+  promptEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+  promptEl.addEventListener('input',()=>{promptEl.style.height='auto';promptEl.style.height=Math.min(promptEl.scrollHeight,160)+'px';});
+  document.querySelectorAll('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{promptEl.value=b.dataset.prompt;send();}));
+  document.getElementById('newChat').addEventListener('click',()=>{current=[];renderMessages();promptEl.focus();});
+  async function refreshProviderStatus() {
+    const pill = document.getElementById('providerPill');
+    const dot = document.getElementById('connectionDot');
+    const label = document.getElementById('connectionLabel');
+    const copy = document.getElementById('connectionText');
+    try {
+      const [statusResponse, dataResponse] = await Promise.all([
+        fetch('/api/status', {cache:'no-store'}),
+        fetch('/api/flop-data', {cache:'no-store'})
+      ]);
+      const status = statusResponse.ok ? await statusResponse.json() : {};
+      const data = dataResponse.ok ? await dataResponse.json() : {};
+      const live = data.health?.status === 'ok' && data.health?.connected === true;
+      const configured = status.flopConfigured === true && typeof status.model === 'string' && status.model.length > 0;
+      const title = live ? 'FLOP DevNet live' : 'FLOP DevNet unavailable';
+      if (pill) pill.innerHTML = '<span class="tiny"></span> ' + title;
+      if (label) label.textContent = configured ? (live ? 'FLOP DevNet · ready to check' : 'FLOP DevNet · not reachable') : 'FLOP key needed';
+      if (dot) dot.style.background = configured && live ? '#54d6a0' : '#e0ad54';
+      if (copy) copy.textContent = configured
+        ? 'Configured model: ' + status.model + '. Public health is ' + (live ? 'live' : 'unavailable') + '. Model permission is confirmed only when FLOP accepts a request.'
+        : 'Add FLOP_API_KEY and the exact authorized FLOP_MODEL_ID to Vercel. Never place the key in browser code or GitHub.';
+    } catch {
+      if (pill) pill.innerHTML = '<span class="tiny"></span> FLOP status unavailable';
+      if (label) label.textContent = 'FLOP status unavailable';
+      if (copy) copy.textContent = 'Could not check FLOP health right now.';
+    }
+  }
+  renderHistory(); renderMessages();
+  refreshProviderStatus();
 })();
 </script>
 </body>
