@@ -1,7 +1,37 @@
-import { createPublicKey, verify } from "node:crypto";
+import { createHash, createPublicKey, verify } from "node:crypto";
 
 const ROOM = "flop-predictions";
 const ROOM_URL = "https://technocore.chat/r/" + ROOM;
+
+function curatedMarkets(now = Date.now()) {
+  const today = new Date(now);
+  const daysSinceMonday = (today.getUTCDay() + 6) % 7;
+  const weekStart = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - daysSinceMonday);
+  const closesAt = weekStart + 7 * 24 * 60 * 60 * 1000 - 60 * 1000;
+  const baselineDate = new Date(weekStart - 60 * 1000).toISOString().slice(0, 10);
+  const closeDate = new Date(closesAt).toISOString().slice(0, 10);
+  return [
+    { symbol: "BTC", name: "Bitcoin", slug: "bitcoin" },
+    { symbol: "ETH", name: "Ethereum", slug: "ethereum" },
+    { symbol: "SOL", name: "Solana", slug: "solana" },
+    { symbol: "XRP", name: "XRP", slug: "ripple" },
+    { symbol: "BNB", name: "BNB", slug: "binancecoin" },
+    { symbol: "DOGE", name: "Dogecoin", slug: "dogecoin" }
+  ].map(({ symbol, name, slug }, curatedOrder) => {
+    const id = createHash("sha256").update(symbol + "|" + baselineDate + "|" + closeDate).digest("hex").slice(0, 16);
+    const payload = {
+      v: 1, type: "market", id,
+      question: "Will " + name + " (" + symbol + "/USD) have a higher CoinGecko UTC daily close on " + closeDate + " than on " + baselineDate + "?",
+      category: "Crypto & Markets", closesAt,
+      sourceUrl: "https://www.coingecko.com/en/coins/" + slug + "/historical_data"
+    };
+    return {
+      seq: -6 + curatedOrder, ts: new Date(weekStart).toISOString(),
+      from: "FLOP curated series", nonce: "0", text: JSON.stringify(payload),
+      sig: null, payload, curated: true, curatedOrder
+    };
+  });
+}
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -119,9 +149,10 @@ export async function getMarkets(request) {
       room: ROOM,
       roomUrl: ROOM_URL,
       lastSeq: room.lastSeq,
-      messages: room.messages.map(({ seq, ts, from, nonce, text, sig, payload }) => ({
-        seq, ts, from, nonce: String(nonce), text, sig, payload
-      }))
+      messages: [
+        ...curatedMarkets(),
+        ...room.messages.map(({ seq, ts, from, nonce, text, sig, payload }) => ({ seq, ts, from, nonce: String(nonce), text, sig, payload }))
+      ]
     });
   } catch {
     return json({ ok: false, error: "Could not load the public Technocore market room. Try again shortly." }, 503);
@@ -165,8 +196,10 @@ export async function postMarketRecord(request) {
     const resolutions = room.messages.filter(m => m.payload.type === "resolution" && m.payload.marketId === payload.marketId);
 
     if (payload.type === "prediction") {
-      if (!market) return json({ error: "That market is not in the current public record. Refresh the page and try again." }, 409);
-      if (resolutions.length || Date.now() >= market.payload.closesAt) return json({ error: "Predictions for this market are closed." }, 409);
+      const curatedMarket = curatedMarkets().find(item => item.payload.id === payload.marketId);
+      if (!market && !curatedMarket) return json({ error: "That market is not in the current public record. Refresh the page and try again." }, 409);
+      const closesAt = market?.payload.closesAt ?? curatedMarket.payload.closesAt;
+      if (resolutions.length || Date.now() >= closesAt) return json({ error: "Predictions for this market are closed." }, 409);
     }
     if (payload.type === "resolution") {
       if (!market) return json({ error: "That market is not in the current public record." }, 409);
@@ -174,7 +207,7 @@ export async function postMarketRecord(request) {
       if (Date.now() < market.payload.closesAt) return json({ error: "Wait until the prediction deadline before resolving this market." }, 409);
       if (resolutions.length) return json({ error: "This market already has a recorded result." }, 409);
     }
-    if (payload.type === "market" && marketRecords.length) return json({ error: "That market ID is already in use. Refresh and create another." }, 409);
+    if (payload.type === "market" && (marketRecords.length || curatedMarkets().some(item => item.payload.id === payload.id))) return json({ error: "That market ID is already in use. Refresh and create another." }, 409);
 
     const upstream = await fetch(ROOM_URL, {
       method: "POST",
