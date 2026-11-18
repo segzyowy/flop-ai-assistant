@@ -208,7 +208,13 @@
       });
       const data = await response.json();
       loading.remove();
-      if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
+      if (!response.ok) {
+        const retryDelay = Number(data.retryAfterSeconds);
+        const message = data.error || `Request failed (${response.status})`;
+        throw new Error(Number.isFinite(retryDelay) && retryDelay > 0
+          ? message + ' FLOP asks you to wait about ' + retryDelay + ' seconds before trying again.'
+          : message);
+      }
       const answer = data.reply || 'The model returned an empty response.';
       current.push({role:'assistant',content:answer});
       const assistantMessage = addMessage('assistant',answer);
