@@ -13,11 +13,11 @@
 <body>
 <div class="wrap">
 <nav class="nav"><a class="brand" href="/">✦ FLOP AI Assistant</a><div class="navlinks"><a href="/">Assistant</a><a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Technocore record ↗</a></div></nav>
-<header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a public forecast on BTC, ETH and other major assets. The questions are curated; your signed YES/NO forecast is recorded publicly on Technocore. No tokens or prizes.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
+<header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a public forecast on BTC, ETH and other major assets. The questions are curated; this app verifies your signed YES/NO forecast and publishes its proof in Technocore. No tokens or prizes.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
 <div class="toolbar"><div class="tabs" role="tablist"><button class="tab active" data-filter="open">Open markets</button><button class="tab" data-filter="all">All markets</button><button class="tab" data-filter="resolved">Resolved</button></div><label class="series-picker">Series <select id="seriesFilter"><option value="all">All series</option><option value="FLOP Network">FLOP Network</option><option value="AI &amp; Agents">AI &amp; Agents</option><option value="Crypto &amp; Markets">Crypto &amp; Markets</option><option value="Tools &amp; Builders">Tools &amp; Builders</option><option value="Community">Community</option></select></label><button class="button" id="refresh">Refresh markets ↻</button></div>
 <main class="grid" id="markets"><div class="empty">Loading public markets…</div></main>
 <section class="side-grid">
-<div class="panel"><h2>Crypto forecast series</h2><p>Vote YES or NO on curated BTC, ETH, SOL, XRP, BNB and DOGE forecasts. Each question compares the asset’s CoinGecko USD daily close on the previous Sunday with its close on the coming Sunday (UTC). The set refreshes each Monday.</p><p>Choose a side to publish your signed forecast to the public Technocore record. Forecasts are free: no FLOP is spent, transferred or promised as a reward.</p></div>
+<div class="panel"><h2>Crypto forecast series</h2><p>Vote YES or NO on curated BTC, ETH, SOL, XRP, BNB and DOGE forecasts. Each question compares the asset’s CoinGecko USD daily close on the previous Sunday with its close on the coming Sunday (UTC). The set refreshes each Monday.</p><p>Choose a side to sign your forecast. The app verifies the wallet signature and stores its proof in the public Technocore room. Forecasts are free: no FLOP is spent, transferred or promised as a reward.</p></div>
 <aside class="panel wallet-panel"><div><h2>Community activity</h2><p>Public participation from verified signed records in the Technocore room.</p><div class="scores" id="scores"><span class="meta">No signed forecasts yet.</span></div></div>
 <div class="field"><label for="did">Your public Ed25519 DID</label><input id="did" spellcheck="false" value="did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h"></div>
 <button class="button" id="connect" type="button">Connect wallet</button>
@@ -25,8 +25,8 @@
 <small id="walletMessage">FLOP supports Substrate sr25519 and Ed25519 accounts. Technocore forecast records require an Ed25519 account matching the public DID above. Never enter a seed or private key here.</small>
 </aside>
 </section>
-<p class="rules">How it works: curated crypto questions appear in the app; signed YES/NO forecasts are recorded in Technocore’s public <code>flop-predictions</code> room. FLOP’s network uses Substrate wallets, not EVM wallets. sr25519 is supported by FLOP, but this Technocore record flow currently requires an Ed25519 <code>did:key</code>. Records are public and the room has bounded retention. A DID signature shows control of a key, not a verified real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
-<footer class="bottom"><span>Free community predictions · no wagering or token transfers</span><a href="https://technocore.chat/r/flop-predictions?format=json&limit=200" target="_blank" rel="noreferrer">View raw signed records ↗</a></footer>
+<p class="rules">How it works: curated crypto questions appear in the app. This app verifies your signed YES/NO forecast and places its proof in Technocore’s public <code>flop-predictions</code> room. These are public Technocore records, not FLOP chain transactions; they do not spend or transfer FLOP. The room has bounded retention. FLOP supports Substrate wallets, but this DID signing flow requires an Ed25519 <code>did:key</code>. A DID signature proves control of a key, not a real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
+<footer class="bottom"><span>Free community predictions · no wagering or token transfers</span><a href="https://technocore.chat/r/flop-predictions?format=json&limit=200" target="_blank" rel="noreferrer">View raw public records ↗</a></footer>
 </div>
 <script>
 (() => {
@@ -90,7 +90,7 @@
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Technocore did not accept the signed record.");
     try { localStorage.setItem(storageKey, nonce); } catch {}
-    if (messageEl) messageEl.textContent = "Signed and recorded on Technocore.";
+    if (messageEl) messageEl.textContent = "Wallet signature verified; proof recorded publicly in Technocore.";
     await loadMarkets();
   }
   function notify(messageEl, text, error = false) {
