@@ -76,7 +76,7 @@ main{max-width:1240px;margin:auto;padding:36px 24px 64px}.hero{display:flex;alig
           <div class="field full"><label for="researchQuestion">Forecast question</label><input id="researchQuestion" maxlength="220" value="Will BTC finish this week above its previous Sunday close?"></div>
           <div class="field full"><label for="evidence">Evidence notes and source links</label><textarea id="evidence" maxlength="1600" required placeholder="Paste the source excerpts, figures, and links you want the model to consider. The app does not fetch the linked pages."></textarea><small>Use public, non-sensitive material. The text you submit is sent to FLOP for inference. Don’t include wallet secrets or private account data.</small></div>
         </div>
-        <div class="run-row"><button id="runResearch" class="run-btn" type="submit">Generate research brief</button><span class="spend-note">Submits one real DevNet inference request. Per-request spend is capped at 5 FLOP; this quota is not a reward.</span></div>
+        <div class="run-row"><button id="runResearch" class="run-btn" type="submit">Generate research brief</button><span class="spend-note">Submits one real DevNet inference request. Each brief is capped at 5 FLOP and uses the site’s shared FLOP allowance. This quota is not a reward.</span></div>
       </form>
       <div class="alert" id="researchAlert" role="alert"></div>
       <div class="result" id="researchResult" aria-live="polite">
