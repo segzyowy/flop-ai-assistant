@@ -2,6 +2,7 @@ import { createHash, createPublicKey, verify } from "node:crypto";
 
 const ROOM = "flop-predictions";
 const ROOM_URL = "https://technocore.chat/r/" + ROOM;
+const PROOF_PREFIX = "FLOP_PREDICTION_PROOF_V1 ";
 
 function curatedMarkets(now = Date.now()) {
   const today = new Date(now);
@@ -60,6 +61,10 @@ function decodeBase58(value) {
   return Buffer.concat([Buffer.alloc(zeros), body]);
 }
 
+function nickForDid(did) {
+  return "did-" + createHash("sha256").update(did).digest("hex").slice(0, 16);
+}
+
 function publicKeyForDid(did) {
   if (typeof did !== "string" || !did.startsWith("did:key:z6Mk") || did.length > 100) {
     throw new Error("Enter an Ed25519 did:key (did:key:z6Mk…).");
@@ -72,16 +77,20 @@ function publicKeyForDid(did) {
   return createPublicKey({ key: Buffer.concat([spkiPrefix, decoded.subarray(2)]), format: "der", type: "spki" });
 }
 
-function validSignature(did, nonce, text, signature) {
+function signatureFormat(did, nonce, text, signature) {
   try {
-    if (typeof nonce !== "string" || !/^[0-9]{1,19}$/.test(nonce)) return false;
-    if (typeof signature !== "string" || !/^[A-Za-z0-9_-]{85}[AQgw]$/.test(signature)) return false;
+    if (typeof nonce !== "string" || !/^[0-9]{1,19}$/.test(nonce)) return null;
+    if (typeof signature !== "string" || !/^[A-Za-z0-9_-]{85}[AQgw]$/.test(signature)) return null;
     const bytes = Buffer.from(signature, "base64url");
-    if (bytes.length !== 64 || bytes.toString("base64url") !== signature) return false;
+    if (bytes.length !== 64 || bytes.toString("base64url") !== signature) return null;
     const key = publicKeyForDid(did);
-    return verify(null, Buffer.from(ROOM + "|" + nonce + "|" + text, "utf8"), key, bytes);
+    const message = Buffer.from(ROOM + "|" + nonce + "|" + text, "utf8");
+    if (verify(null, message, key, bytes)) return "native";
+    const wrapped = Buffer.concat([Buffer.from("<Bytes>", "utf8"), message, Buffer.from("</Bytes>", "utf8")]);
+    if (verify(null, wrapped, key, bytes)) return "polkadot-wrapped";
+    return null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -92,11 +101,26 @@ function cleanText(value) {
 }
 
 function parsePayload(message) {
-  if (!message || typeof message.text !== "string" || !validSignature(message.from, String(message.nonce), message.text, message.sig)) return null;
+  if (!message || typeof message.text !== "string") return null;
+  let verified = message;
+  let signatureType = "native";
+  if (!message.sig && message.text.startsWith(PROOF_PREFIX)) {
+    try {
+      const proof = JSON.parse(message.text.slice(PROOF_PREFIX.length));
+      if (proof?.v !== 1 || message.from !== nickForDid(proof.did) || typeof proof.text !== "string") return null;
+      if (signatureFormat(proof.did, proof.nonce, proof.text, proof.sig) !== "polkadot-wrapped") return null;
+      verified = { ...message, from: proof.did, nonce: String(proof.nonce), sig: proof.sig, text: proof.text };
+      signatureType = "polkadot-wrapped";
+    } catch {
+      return null;
+    }
+  } else if (signatureFormat(message.from, String(message.nonce), message.text, message.sig) !== "native") {
+    return null;
+  }
   try {
-    const payload = JSON.parse(message.text);
+    const payload = JSON.parse(verified.text);
     if (payload?.v !== 1 || !["market", "prediction", "resolution"].includes(payload.type)) return null;
-    return { ...message, payload };
+    return { ...verified, payload, signatureType };
   } catch {
     return null;
   }
@@ -180,8 +204,9 @@ export async function postMarketRecord(request) {
   if (typeof text !== "string" || !text || text.length > 3500 || cleanText(text) !== text) {
     return json({ error: "The signed record must be one clean line under 3,500 characters." }, 400);
   }
-  if (!validSignature(did, nonce, text, sig)) {
-    return json({ error: "The signature did not verify for that Ed25519 DID. Check that the selected wallet account matches the DID." }, 400);
+  const signatureType = signatureFormat(did, nonce, text, sig);
+  if (!signatureType) {
+    return json({ error: "The signature did not verify for that Ed25519 DID. Confirm the selected Ed25519 wallet account matches the DID." }, 400);
   }
 
   let payload;
@@ -209,10 +234,16 @@ export async function postMarketRecord(request) {
     }
     if (payload.type === "market" && (marketRecords.length || curatedMarkets().some(item => item.payload.id === payload.id))) return json({ error: "That market ID is already in use. Refresh and create another." }, 409);
 
+    const upstreamRecord = signatureType === "native"
+      ? { did, sig, nonce, text }
+      : {
+          from: nickForDid(did),
+          text: PROOF_PREFIX + JSON.stringify({ v: 1, did, nonce, sig, text })
+        };
     const upstream = await fetch(ROOM_URL, {
       method: "POST",
       headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ did, sig, nonce, text }),
+      body: JSON.stringify(upstreamRecord),
       signal: AbortSignal.timeout(10000)
     });
     if (!upstream.ok) {
