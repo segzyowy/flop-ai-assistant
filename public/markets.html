@@ -13,26 +13,19 @@
 <body>
 <div class="wrap">
 <nav class="nav"><a class="brand" href="/">✦ FLOP AI Assistant</a><div class="navlinks"><a href="/">Assistant</a><a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Technocore record ↗</a></div></nav>
-<header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a clear forecast, see how the community is calling it, and build a track record. Predictions are free: no FLOP tokens, payments, or prizes. Signed posts are public on Technocore.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
+<header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a public forecast on BTC, ETH and other major assets. The questions are curated; your signed YES/NO forecast is recorded publicly on Technocore. No tokens or prizes.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
 <div class="toolbar"><div class="tabs" role="tablist"><button class="tab active" data-filter="open">Open markets</button><button class="tab" data-filter="all">All markets</button><button class="tab" data-filter="resolved">Resolved</button></div><label class="series-picker">Series <select id="seriesFilter"><option value="all">All series</option><option value="FLOP Network">FLOP Network</option><option value="AI &amp; Agents">AI &amp; Agents</option><option value="Crypto &amp; Markets">Crypto &amp; Markets</option><option value="Tools &amp; Builders">Tools &amp; Builders</option><option value="Community">Community</option></select></label><button class="button" id="refresh">Refresh markets ↻</button></div>
 <main class="grid" id="markets"><div class="empty">Loading public markets…</div></main>
 <section class="side-grid">
-<div class="panel"><h2>Create a community question</h2><p>Set a yes/no question with a deadline. The community can change predictions until the market closes.</p>
-<form id="createForm"><div class="form-grid">
-<div class="field full"><label for="question">Question</label><input id="question" maxlength="180" required placeholder="Will FLOP Devnet add public agent session support by…?"></div>
-<div class="field"><label for="category">Category</label><select id="category"><option>FLOP Network</option><option>AI &amp; Agents</option><option>Crypto &amp; Markets</option><option>Tools &amp; Builders</option><option>Community</option></select></div>
-<div class="field"><label for="closesAt">Prediction deadline</label><input id="closesAt" type="datetime-local" required></div>
-<div class="field full"><label for="sourceUrl">Background source (optional)</label><input id="sourceUrl" type="url" placeholder="https://…"></div>
-</div><div class="form-actions"><button class="button primary" id="createButton" type="submit" disabled>Connect wallet to create</button><span class="message" id="createMessage"></span></div></form>
-</div>
-<aside class="panel wallet-panel"><div><h2>Community leaderboard</h2><p>100 points for each correct resolved prediction. Points have no cash or token value.</p><div class="scores" id="scores"><span class="meta">Scores will appear as markets resolve.</span></div></div>
+<div class="panel"><h2>Crypto forecast series</h2><p>Vote YES or NO on curated BTC, ETH, SOL, XRP, BNB and DOGE forecasts. Each question compares the asset’s CoinGecko USD daily close on the previous Sunday with its close on the coming Sunday (UTC). The set refreshes each Monday.</p><p>Choose a side to publish your signed forecast to the public Technocore record. Forecasts are free: no FLOP is spent, transferred or promised as a reward.</p></div>
+<aside class="panel wallet-panel"><div><h2>Community activity</h2><p>Public participation from verified signed records in the Technocore room.</p><div class="scores" id="scores"><span class="meta">No signed forecasts yet.</span></div></div>
 <div class="field"><label for="did">Your public Ed25519 DID</label><input id="did" spellcheck="false" value="did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h"></div>
 <button class="button" id="connect" type="button">Connect wallet</button>
 <div class="field"><label for="account">Account to sign as</label><select id="account" disabled><option>Connect a Polkadot-compatible wallet</option></select></div>
-<small id="walletMessage">Only your wallet signs. Never enter a seed or private key here. Choose an Ed25519 account that matches the DID above.</small>
+<small id="walletMessage">FLOP supports Substrate sr25519 and Ed25519 accounts. Technocore forecast records require an Ed25519 account matching the public DID above. Never enter a seed or private key here.</small>
 </aside>
 </section>
-<p class="rules">How it works: signed market questions, predictions and results are recorded in Technocore’s public <code>flop-predictions</code> room. Only a market creator may post its result, with an HTTPS evidence link; VOID cancels scoring. The newest retained records are shown. Technocore rooms have bounded retention, so this is a public community record, not permanent archival storage. A DID signature shows control of a key, not a verified real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
+<p class="rules">How it works: curated crypto questions appear in the app; signed YES/NO forecasts are recorded in Technocore’s public <code>flop-predictions</code> room. FLOP’s network uses Substrate wallets, not EVM wallets. sr25519 is supported by FLOP, but this Technocore record flow currently requires an Ed25519 <code>did:key</code>. Records are public and the room has bounded retention. A DID signature shows control of a key, not a verified real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
 <footer class="bottom"><span>Free community predictions · no wagering or token transfers</span><a href="https://technocore.chat/r/flop-predictions?format=json&limit=200" target="_blank" rel="noreferrer">View raw signed records ↗</a></footer>
 </div>
 <script>
@@ -48,18 +41,26 @@
   const didEl = document.getElementById("did");
   const accountEl = document.getElementById("account");
   const connectBtn = document.getElementById("connect");
-  const createBtn = document.getElementById("createButton");
   const walletMessage = document.getElementById("walletMessage");
   const clean = s => String(s ?? "").replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Zl}\p{Zp}]/gu, " ").trim();
   const getMarket = id => records.find(r => r.payload.type === "market" && r.payload.id === id);
   const getPredictions = id => records.filter(r => r.payload.type === "prediction" && r.payload.marketId === id);
   const getResolution = id => records.find(r => r.payload.type === "resolution" && r.payload.marketId === id);
   const didKey = () => clean(didEl.value);
-  function connected() { return Boolean(signer && accountEl.value && didKey()); }
+  function selectedAccount() { return accountList.find(item => item.address === accountEl.value); }
+  function isEd25519(account) { return String(account?.type || "").toLowerCase() === "ed25519"; }
+  function connected() { return Boolean(signer && isEd25519(selectedAccount()) && didKey()); }
   function updateWalletControls() {
-    createBtn.disabled = !connected();
-    createBtn.textContent = connected() ? "Sign & publish question" : "Connect wallet to create";
-    document.querySelectorAll("[data-vote]").forEach(button => button.disabled = !connected());
+    const selected = selectedAccount();
+    document.querySelectorAll("[data-vote]").forEach(button => {
+      const cardClosed = Boolean(button.closest(".card")?.querySelector(".state.closed"));
+      button.disabled = !connected() || cardClosed;
+    });
+    if (selected && !isEd25519(selected)) {
+      walletMessage.textContent = "This sr25519 account is FLOP-compatible, but Technocore forecast signing requires an Ed25519 account matching the DID. Select your Ed25519 account to vote.";
+    } else if (selected) {
+      walletMessage.textContent = "Ed25519 account selected. It must match the public DID above. Your wallet will ask before each public forecast is signed.";
+    }
   }
   function encodeBase64Url(hex) {
     const bytes = Uint8Array.from(hex.slice(2).match(/.{2}/g) || [], p => parseInt(p, 16));
@@ -68,7 +69,7 @@
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
   async function postRecord(payload, messageEl, button) {
-    if (!connected()) throw new Error("Connect a matching wallet first.");
+    if (!connected()) throw new Error("Select an Ed25519 account that matches your public DID to sign this Technocore forecast.");
     if (button) button.disabled = true;
     const text = JSON.stringify(payload);
     const storageKey = "technocore-market-nonce-" + didKey();
@@ -78,10 +79,10 @@
     const bytes = new TextEncoder().encode(ROOM + "|" + nonce + "|" + text);
     let hex = "0x";
     for (const byte of bytes) hex += byte.toString(16).padStart(2, "0");
-    const account = accountList.find(item => item.address === accountEl.value);
+    const account = selectedAccount();
     const signed = await signer.signRaw({ address: account.address, data: hex, type: "bytes" });
     const signature = encodeBase64Url(signed?.signature || "");
-    if (!/^[A-Za-z0-9_-]{85}[AQgw]$/.test(signature)) throw new Error("The wallet returned an unsupported signature. Use the Ed25519 account matching your DID.");
+    if (!/^[A-Za-z0-9_-]{85}[AQgw]$/.test(signature)) throw new Error("The wallet returned an unsupported signature. Select the Ed25519 account matching your DID.");
     const response = await fetch("/api/technocore/markets", {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ did: didKey(), nonce, sig: signature, text })
@@ -132,7 +133,7 @@
     state.textContent = resolution ? "Resolved" : closed ? "Closed for predictions" : "Closes " + dateLabel(p.closesAt);
     top.append(tag, state);
     const question = document.createElement("h2"); question.className = "question"; question.textContent = p.question;
-    const meta = document.createElement("div"); meta.className = "meta"; meta.textContent = "Created by " + labelDid(market.from) + " · " + predictions.length + " signed prediction record" + (predictions.length === 1 ? "" : "s");
+    const meta = document.createElement("div"); meta.className = "meta"; meta.textContent = (market.curated ? "Curated series" : "Created by " + labelDid(market.from)) + " · " + predictions.length + " signed prediction record" + (predictions.length === 1 ? "" : "s");
     card.append(top, question, meta);
     if (p.sourceUrl) {
       const link = safeLink(p.sourceUrl, "Background source ↗");
@@ -183,33 +184,20 @@
       });
       form.append(select, evidence, button, status); card.appendChild(form);
     }
-    const footer = document.createElement("div"); footer.className = "meta"; footer.style.marginTop = "14px"; footer.textContent = "Technocore record #" + market.seq + " · " + dateLabel(market.ts);
+    const footer = document.createElement("div"); footer.className = "meta"; footer.style.marginTop = "14px"; footer.textContent = market.curated ? "Curated market · USD daily close · closes " + dateLabel(p.closesAt) : "Technocore record #" + market.seq + " · " + dateLabel(market.ts);
     card.appendChild(footer);
     return card;
   }
   function renderScores() {
-    const totals = new Map();
-    for (const marketRecord of records.filter(r => r.payload.type === "market")) {
-      const p = marketRecord.payload; const resolution = getResolution(p.id);
-      if (!resolution || resolution.payload.outcome === "VOID") continue;
-      const latest = new Map();
-      for (const vote of getPredictions(p.id)) {
-        if (Date.parse(vote.ts) <= p.closesAt) latest.set(vote.from, vote);
-      }
-      for (const [did, vote] of latest) if (vote.payload.outcome === resolution.payload.outcome) totals.set(did, (totals.get(did) || 0) + 100);
-    }
-    const list = [...totals].sort((a,b) => b[1] - a[1]).slice(0,10);
+    const forecasts = records.filter(item => item.payload.type === "prediction");
+    const dIDs = new Set(forecasts.map(item => item.from));
     const el = document.getElementById("scores"); el.replaceChildren();
-    if (!list.length) { const empty = document.createElement("span"); empty.className = "meta"; empty.textContent = "Scores appear after a market is resolved."; el.appendChild(empty); return; }
-    list.forEach(([did, points], i) => {
-      const row = document.createElement("div"); row.className = "score";
-      const name = document.createElement("span"); name.textContent = (i + 1) + ". " + labelDid(did);
-      const value = document.createElement("strong"); value.textContent = points + " pts";
-      row.append(name, value); el.appendChild(row);
-    });
+    const summary = document.createElement("span"); summary.className = "meta";
+    summary.textContent = dIDs.size + " public DID key" + (dIDs.size === 1 ? "" : "s") + " · " + forecasts.length + " signed forecast record" + (forecasts.length === 1 ? "" : "s");
+    el.appendChild(summary);
   }
   function render() {
-    const marketRecords = records.filter(r => r.payload.type === "market").slice().reverse();
+    const marketRecords = records.filter(r => r.payload.type === "market").sort((a,b) => Number(Boolean(b.curated)) - Number(Boolean(a.curated)) || (a.curated ? a.curatedOrder - b.curatedOrder : b.seq - a.seq));
     const visible = marketRecords.filter(item => {
       const resolved = Boolean(getResolution(item.payload.id));
       const matchesSeries = seriesFilter === "all" || seriesFor(item.payload.category) === seriesFilter;
@@ -221,7 +209,7 @@
     marketEl.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement("div"); empty.className = "empty";
-      empty.textContent = filter === "open" ? "No open markets yet. Create the first useful question below." : "No markets match this view yet.";
+      empty.textContent = filter === "open" ? "No open forecasts match this series." : "No markets match this view yet.";
       marketEl.appendChild(empty);
     } else visible.forEach(item => marketEl.appendChild(renderCard(item)));
     renderScores();
@@ -234,7 +222,8 @@
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Technocore is temporarily unavailable.");
       records = Array.isArray(data.messages) ? data.messages.slice().sort((a,b) => a.seq - b.seq) : [];
-      statusEl.innerHTML = "<b>●</b> Technocore connected · " + records.length + " verified records";
+      const signedCount = records.filter(item => !item.curated).length;
+      statusEl.innerHTML = "<b>●</b> Technocore connected · " + signedCount + " signed records";
       render();
     } catch (error) {
       statusEl.textContent = error.message || "Could not load the Technocore record.";
@@ -244,7 +233,7 @@
     }
   }
   connectBtn.addEventListener("click", async () => {
-    connectBtn.disabled = true; walletMessage.textContent = "Approve wallet access, then choose the account that matches your Ed25519 DID.";
+    connectBtn.disabled = true; walletMessage.textContent = "Approve wallet access, then choose an Ed25519 account matching your DID. sr25519 accounts can connect but cannot sign Technocore records.";
     try {
       const injected = window.injectedWeb3 || {};
       let match = null;
@@ -267,7 +256,7 @@
         accountEl.appendChild(option);
       });
       accountEl.disabled = false; connectBtn.textContent = "Wallet connected";
-      walletMessage.textContent = "Wallet connected. Choose the Ed25519 account belonging to your DID. Your wallet shows every signature for approval.";
+      walletMessage.textContent = "Wallet connected. FLOP supports sr25519 and Ed25519 Substrate accounts; choose the Ed25519 account matching your DID to publish a forecast. EVM wallets cannot sign FLOP transactions.";
       updateWalletControls();
     } catch (error) { walletMessage.textContent = error.message || "Could not connect the wallet."; }
     finally { connectBtn.disabled = false; }
@@ -280,30 +269,6 @@
   }));
   document.getElementById("seriesFilter").addEventListener("change", event => { seriesFilter = event.target.value; render(); });
   document.getElementById("refresh").addEventListener("click", loadMarkets);
-  document.getElementById("createForm").addEventListener("submit", async event => {
-    event.preventDefault();
-    const msg = document.getElementById("createMessage"); msg.textContent = "";
-    const localDate = new Date(document.getElementById("closesAt").value);
-    if (Number.isNaN(localDate.getTime())) { notify(msg, "Choose a valid deadline.", true); return; }
-    const button = createBtn; button.disabled = true;
-    const random = crypto.getRandomValues(new Uint8Array(8));
-    const id = [...random].map(byte => byte.toString(16).padStart(2, "0")).join("");
-    try {
-      await postRecord({
-        v: 1, type: "market", id, question: clean(document.getElementById("question").value),
-        category: document.getElementById("category").value, closesAt: localDate.getTime(),
-        sourceUrl: document.getElementById("sourceUrl").value.trim()
-      }, msg, button);
-      event.target.reset(); setDefaultClose();
-    } catch (error) { notify(msg, error.message, true); }
-    finally { updateWalletControls(); }
-  });
-  function setDefaultClose() {
-    const close = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    close.setMinutes(close.getMinutes() - close.getTimezoneOffset());
-    document.getElementById("closesAt").value = close.toISOString().slice(0,16);
-  }
-  setDefaultClose();
   loadMarkets();
 })();
 </script>
