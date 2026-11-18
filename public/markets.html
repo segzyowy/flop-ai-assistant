@@ -8,22 +8,50 @@
 :root{color-scheme:dark;--bg:#0b1020;--panel:#11182a;--panel2:#151d32;--line:#29334c;--text:#eef2ff;--muted:#a1abc3;--purple:#a995ff;--cyan:#75d8e8;--green:#80e2bd;--red:#f0a1a8}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -10%,#262650 0,transparent 50%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--cyan)}button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:24px 22px 80px}.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}.brand{font-weight:800;letter-spacing:.02em;color:#fff;text-decoration:none}.navlinks{display:flex;gap:16px;align-items:center;color:var(--muted);font-size:13px}.hero{display:grid;grid-template-columns:1fr auto;gap:25px;align-items:end;margin-bottom:25px}.eyebrow{color:var(--purple);text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.045em;margin:8px 0 12px}.hero p{color:var(--muted);max-width:700px;margin:0}.status{border:1px solid var(--line);background:#11182acc;border-radius:99px;padding:8px 13px;color:var(--muted);font-size:12px;white-space:nowrap}.status b{color:var(--green)}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:22px 0}.tabs{display:flex;gap:7px;flex-wrap:wrap}.series-picker{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.series-picker select{border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 32px 9px 11px}.tab,.button{border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:var(--panel);color:var(--text);font-size:13px}.tab.active{border-color:#7867da;background:#252044;color:#fff}.button.primary{border:0;background:linear-gradient(135deg,#8d75ff,#588bed);font-weight:800}.button:disabled{opacity:.5;cursor:not-allowed}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card,.panel{border:1px solid var(--line);background:linear-gradient(150deg,#131a2d,#101626);border-radius:16px;padding:18px;box-shadow:0 12px 35px #0002}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#c8bcff;border:1px solid #504777;border-radius:99px;padding:4px 8px}.state{font-size:11px;color:var(--green)}.state.closed{color:#e0b8bd}.question{font-size:19px;line-height:1.35;font-weight:750;letter-spacing:-.02em;margin:0 0 8px}.meta{color:var(--muted);font-size:11px}.source{font-size:12px;margin-top:8px}.vote-row{display:flex;gap:8px;margin-top:17px}.vote{flex:1;border:1px solid #39435a;background:#171f32;color:#dfe5f6;border-radius:10px;padding:11px;font-weight:700}.vote.yes:hover,.vote.selected.yes{border-color:#58b994;background:#18362f;color:#abf1d7}.vote.no:hover,.vote.selected.no{border-color:#c77682;background:#3a222e;color:#ffc4c7}.your-pick{margin-top:11px;font-size:12px;color:var(--muted)}.resolution{margin-top:12px;padding:10px;border-radius:10px;background:#182a27;color:var(--green);font-size:12px}.resolve-form{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.resolve-form select,.resolve-form input{min-width:0;flex:1;background:#0d1423;border:1px solid var(--line);border-radius:9px;padding:8px;color:var(--text)}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 20px;border:1px dashed var(--line);border-radius:15px}.side-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:15px;margin-top:24px}.panel h2{font-size:16px;margin:0 0 5px}.panel>p{color:var(--muted);font-size:12px;margin:0 0 16px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#b7c0d5}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:#0d1423;color:var(--text);padding:10px 11px;outline:none}.field textarea{min-height:76px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#8170e8}.hint{font-size:10px;color:#8792ac}.form-actions{display:flex;align-items:center;gap:10px;margin-top:13px;flex-wrap:wrap}.message{font-size:11px;color:var(--muted);min-height:16px}.wallet-panel{display:flex;flex-direction:column;gap:10px}.wallet-panel .field{margin-top:2px}.wallet-panel small{color:var(--muted);font-size:11px}.scores{display:flex;flex-direction:column;gap:8px;margin-top:11px}.score{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #202940;padding:8px 0;font-size:12px}.score strong{color:var(--green)}.rules{margin-top:20px;color:#8893ac;font-size:10px;line-height:1.7}.rules a{color:#adb8d2}.bottom{margin-top:18px;display:flex;justify-content:space-between;color:#78849e;font-size:10px;gap:12px;flex-wrap:wrap}
 @media(max-width:780px){.hero{grid-template-columns:1fr}.status{justify-self:start}.grid{grid-template-columns:1fr}.side-grid{grid-template-columns:1fr}.wrap{padding:18px 14px 60px}.nav{margin-bottom:27px}.navlinks{gap:10px}.toolbar{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+:root{--bg:#080e1a;--panel:#0f1928;--panel2:#142236;--line:#27384c;--text:#f2f6fc;--muted:#9aabc0;--purple:#a78bfa;--cyan:#72d5e8;--green:#55d6a4;--red:#fb8794}
+body{background:radial-gradient(ellipse at 75% -15%,#24375d 0,transparent 48%),radial-gradient(ellipse at 0 55%,#10253a 0,transparent 42%),var(--bg);font-family:"DM Sans",Inter,ui-sans-serif,system-ui,sans-serif}
+.nav{position:sticky;top:0;z-index:20;padding:14px 16px;margin:0 -16px 30px;background:linear-gradient(180deg,#080e1af2,#080e1ad9);backdrop-filter:blur(18px);border-bottom:1px solid #28364a88}
+.navlinks{gap:10px}
+.hero{margin-bottom:30px}
+.hero h1{font-family:"Space Grotesk",sans-serif;font-size:clamp(38px,6vw,62px);letter-spacing:-.055em}
+.hero p{font-size:15px;line-height:1.7}
+.status{background:#101c2bcc;border-color:#30455c;color:#b6c4d5}
+.grid{gap:16px}
+.card,.panel{background:linear-gradient(150deg,#111d2d,#0d1725);border-color:#293b50;box-shadow:0 16px 44px #02081566}
+.card{transition:transform .18s,border-color .18s,box-shadow .18s}
+.card:hover{transform:translateY(-2px);border-color:#526b8b;box-shadow:0 22px 50px #02081588}
+.question{font-family:"Space Grotesk",sans-serif;font-size:20px}
+.tag{color:#a8e5ed;border-color:#286276;background:#0e2935}
+.vote-row{margin-top:12px}
+.vote{border-color:#34475d;background:#142236}
+.vote.yes:hover,.vote.selected.yes{border-color:#42c995;background:#12342f;color:#b9ffe0}
+.vote.no:hover,.vote.selected.no{border-color:#eb778b;background:#38222c;color:#ffd0d4}
+.sentiment{margin-top:16px}
+.sentiment-label{color:#acb9cb;font-size:11px;margin-bottom:7px}
+.sentiment-bar{height:8px;display:flex;overflow:hidden;border-radius:99px;background:#26354a}
+.sentiment-yes{background:linear-gradient(90deg,#36c68b,#68e0b0);transition:width .3s}
+.sentiment-no{background:linear-gradient(90deg,#e77887,#c45f80);transition:width .3s}
+.wallet-select{max-width:165px;border:1px solid var(--line);border-radius:10px;background:#101b2b;color:#eaf1fb;padding:9px 10px;font-size:11px}
+.wallet-button{border:1px solid #5a71a0;background:linear-gradient(135deg,#425e96,#286879);box-shadow:0 6px 18px #172c4d88;font-weight:800;white-space:nowrap}
+.wallet-button:hover{filter:brightness(1.12);border-color:#8ba4da}
+.wallet-message{max-width:185px;color:#aab9cc;font-size:10px;line-height:1.3}
+.wallet-note{display:flex;align-items:flex-start;gap:10px;margin-top:18px;padding:12px;border:1px solid #294a56;border-radius:12px;background:linear-gradient(120deg,#102832,#101c2b);color:#a9c2cb;font-size:11px}
+.wallet-note-icon{display:grid;place-items:center;flex:0 0 22px;height:22px;border-radius:50%;background:#164d46;color:#78e4b2;font-weight:900}
+.series-picker select{border-color:#30435b;background:#101b2b}
+.tab.active{border-color:#6784b0;background:#1c2c47}
+@media(max-width:780px){.nav{margin:0 -6px 24px;padding:12px 4px}.navlinks{gap:7px;flex-wrap:wrap;justify-content:flex-end}.wallet-select{max-width:120px;padding:8px}.wallet-button{padding:8px 10px;font-size:11px}.wallet-message{flex-basis:100%;text-align:right;max-width:none}.hero{margin-bottom:22px}.hero h1{font-size:40px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav class="nav"><a class="brand" href="/">✦ FLOP AI Assistant</a><div class="navlinks"><a href="/">Assistant</a><a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Technocore record ↗</a></div></nav>
+<nav class="nav"><a class="brand" href="/">✦ FLOP AI Assistant</a><div class="navlinks"><a href="/">Assistant</a><a href="https://technocore.chat/r/flop-predictions" target="_blank" rel="noreferrer">Public record ↗</a><select id="account" class="wallet-select" aria-label="Choose wallet account" hidden disabled><option>Choose account</option></select><button class="button wallet-button" id="connect" type="button">Connect wallet</button><span id="walletMessage" class="wallet-message" role="status" hidden></span></div></nav>
 <header class="hero"><div><div class="eyebrow">Community forecasts · public records</div><h1>Prediction Market</h1><p>Make a public forecast on BTC, ETH and other major assets. The questions are curated; this app verifies your signed YES/NO forecast and publishes its proof in Technocore. No tokens or prizes.</p></div><div class="status" id="connection"><b>●</b> Connecting to Technocore…</div></header>
 <div class="toolbar"><div class="tabs" role="tablist"><button class="tab active" data-filter="open">Open markets</button><button class="tab" data-filter="all">All markets</button><button class="tab" data-filter="resolved">Resolved</button></div><label class="series-picker">Series <select id="seriesFilter"><option value="all">All series</option><option value="FLOP Network">FLOP Network</option><option value="AI &amp; Agents">AI &amp; Agents</option><option value="Crypto &amp; Markets">Crypto &amp; Markets</option><option value="Tools &amp; Builders">Tools &amp; Builders</option><option value="Community">Community</option></select></label><button class="button" id="refresh">Refresh markets ↻</button></div>
 <main class="grid" id="markets"><div class="empty">Loading public markets…</div></main>
 <section class="side-grid">
 <div class="panel"><h2>Crypto forecast series</h2><p>Vote YES or NO on curated BTC, ETH, SOL, XRP, BNB and DOGE forecasts. Each question compares the asset’s CoinGecko USD daily close on the previous Sunday with its close on the coming Sunday (UTC). The set refreshes each Monday.</p><p>Choose a side to sign your forecast. The app verifies the wallet signature and stores its proof in the public Technocore room. Forecasts are free: no FLOP is spent, transferred or promised as a reward.</p></div>
-<aside class="panel wallet-panel"><div><h2>Community activity</h2><p>Public participation from verified signed records in the Technocore room.</p><div class="scores" id="scores"><span class="meta">No signed forecasts yet.</span></div></div>
-<div class="field"><label for="did">Your public Ed25519 DID</label><input id="did" spellcheck="false" value="did:key:z6MkooHatvhcHQjgQ62MyUoLe1TwNQoWvyjKPLNL3ysDDW5h"></div>
-<button class="button" id="connect" type="button">Connect wallet</button>
-<div class="field"><label for="account">Account to sign as</label><select id="account" disabled><option>Connect a Polkadot-compatible wallet</option></select></div>
-<small id="walletMessage">FLOP supports Substrate sr25519 and Ed25519 accounts. Technocore forecast records require an Ed25519 account matching the public DID above. Never enter a seed or private key here.</small>
-</aside>
+<aside class="panel wallet-panel"><div><h2>Community activity</h2><p>Public participation from wallet signatures verified by this app.</p><div class="scores" id="scores"><span class="meta">No signed forecasts yet.</span></div></div><div class="wallet-note"><span class="wallet-note-icon">✓</span><span>FLOP wallets use Substrate. Connect an Ed25519 account to publish forecasts; no seed or private key is requested.</span></div></aside>
 </section>
 <p class="rules">How it works: curated crypto questions appear in the app. This app verifies your signed YES/NO forecast and places its proof in Technocore’s public <code>flop-predictions</code> room. These are public Technocore records, not FLOP chain transactions; they do not spend or transfer FLOP. The room has bounded retention. FLOP supports Substrate wallets, but this DID signing flow requires an Ed25519 <code>did:key</code>. A DID signature proves control of a key, not a real-world identity. <a href="https://technocore.chat/llms.txt" target="_blank" rel="noreferrer">Technocore protocol</a> · <a href="https://ask.flop.finance/docs/testnet-and-timeline" target="_blank" rel="noreferrer">FLOP network status</a>.</p>
 <footer class="bottom"><span>Free community predictions · no wagering or token transfers</span><a href="https://technocore.chat/r/flop-predictions?format=json&limit=200" target="_blank" rel="noreferrer">View raw public records ↗</a></footer>
@@ -36,9 +64,10 @@
   let seriesFilter = "all";
   let signer = null;
   let accountList = [];
+  let activeDid = "";
+  const WALLET_STORE = "flop-wallet-v1";
   const marketEl = document.getElementById("markets");
   const statusEl = document.getElementById("connection");
-  const didEl = document.getElementById("did");
   const accountEl = document.getElementById("account");
   const connectBtn = document.getElementById("connect");
   const walletMessage = document.getElementById("walletMessage");
@@ -46,21 +75,51 @@
   const getMarket = id => records.find(r => r.payload.type === "market" && r.payload.id === id);
   const getPredictions = id => records.filter(r => r.payload.type === "prediction" && r.payload.marketId === id);
   const getResolution = id => records.find(r => r.payload.type === "resolution" && r.payload.marketId === id);
-  const didKey = () => clean(didEl.value);
-  function selectedAccount() { return accountList.find(item => item.address === accountEl.value); }
+  const didKey = () => activeDid;
+  function selectedAccount() { return accountList.find(item => item.account?.address === accountEl.value)?.account || null; }
   function isEd25519(account) { return String(account?.type || "").toLowerCase() === "ed25519"; }
-  function connected() { return Boolean(signer && isEd25519(selectedAccount()) && didKey()); }
+  function base58Decode(value) {
+    const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+    let number = 0n;
+    for (const char of value) { const digit = alphabet.indexOf(char); if (digit < 0) throw new Error("Invalid wallet address."); number = number * 58n + BigInt(digit); }
+    const bytes = [];
+    while (number > 0n) { bytes.push(Number(number & 255n)); number >>= 8n; }
+    bytes.reverse();
+    let zeros = 0; while (zeros < value.length && value[zeros] === "1") zeros++;
+    return Uint8Array.from([...new Array(zeros).fill(0), ...bytes]);
+  }
+  function base58Encode(bytes) {
+    const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+    let number = 0n;
+    for (const byte of bytes) number = (number << 8n) + BigInt(byte);
+    let encoded = "";
+    while (number > 0n) { const digit = Number(number % 58n); number /= 58n; encoded = alphabet[digit] + encoded; }
+    let zeros = 0; while (zeros < bytes.length && bytes[zeros] === 0) zeros++;
+    return "1".repeat(zeros) + encoded;
+  }
+  function didForAccount(account) {
+    if (!isEd25519(account)) return "";
+    try {
+      const address = base58Decode(account.address);
+      const publicKey = address.slice(-34, -2);
+      if (publicKey.length !== 32) return "";
+      const multicodec = new Uint8Array(34);
+      multicodec[0] = 0xed; multicodec[1] = 0x01; multicodec.set(publicKey, 2);
+      return "did:key:z" + base58Encode(multicodec);
+    } catch { return ""; }
+  }
+  function connected() { return Boolean(signer && didForAccount(selectedAccount())); }
+  function shortAddress(address) { return address ? address.slice(0, 8) + "…" + address.slice(-5) : ""; }
   function updateWalletControls() {
     const selected = selectedAccount();
+    activeDid = didForAccount(selected);
     document.querySelectorAll("[data-vote]").forEach(button => {
       const cardClosed = Boolean(button.closest(".card")?.querySelector(".state.closed"));
       button.disabled = !connected() || cardClosed;
     });
-    if (selected && !isEd25519(selected)) {
-      walletMessage.textContent = "This sr25519 account is FLOP-compatible, but Technocore forecast signing requires an Ed25519 account matching the DID. Select your Ed25519 account to vote.";
-    } else if (selected) {
-      walletMessage.textContent = "Ed25519 account selected. It must match the public DID above. Your wallet will ask before each public forecast is signed.";
-    }
+    walletMessage.hidden = !selected;
+    if (selected && !isEd25519(selected)) walletMessage.textContent = "sr25519 connected · choose Ed25519 to publish forecasts";
+    else if (selected) walletMessage.textContent = "Ed25519 connected · signature verified by this app";
   }
   function encodeBase64Url(hex) {
     const bytes = Uint8Array.from(hex.slice(2).match(/.{2}/g) || [], p => parseInt(p, 16));
@@ -69,7 +128,7 @@
     return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
   async function postRecord(payload, messageEl, button) {
-    if (!connected()) throw new Error("Select an Ed25519 account that matches your public DID to sign this Technocore forecast.");
+    if (!connected()) throw new Error("Select an Ed25519 account to sign this Technocore forecast.");
     if (button) button.disabled = true;
     const text = JSON.stringify(payload);
     const storageKey = "technocore-market-nonce-" + didKey();
@@ -124,8 +183,13 @@
     const predictions = getPredictions(p.id);
     const resolution = getResolution(p.id);
     const closed = Date.now() >= p.closesAt || Boolean(resolution);
-    const myPredictions = predictions.filter(item => item.from === didKey() && Date.parse(item.ts) <= p.closesAt);
-    const myLatest = myPredictions.at(-1);
+    const latestByDID = new Map();
+    for (const item of predictions) if (item.from && Date.parse(item.ts) <= p.closesAt) latestByDID.set(item.from, item);
+    const effectivePredictions = [...latestByDID.values()];
+    const yesCount = effectivePredictions.filter(item => item.payload.outcome === "YES").length;
+    const noCount = effectivePredictions.filter(item => item.payload.outcome === "NO").length;
+    const totalVotes = effectivePredictions.length;
+    const myLatest = effectivePredictions.filter(item => item.from === didKey()).at(-1);
     const card = document.createElement("article"); card.className = "card";
     const top = document.createElement("div"); top.className = "card-top";
     const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = p.category;
@@ -133,8 +197,19 @@
     state.textContent = resolution ? "Resolved" : closed ? "Closed for predictions" : "Closes " + dateLabel(p.closesAt);
     top.append(tag, state);
     const question = document.createElement("h2"); question.className = "question"; question.textContent = p.question;
-    const meta = document.createElement("div"); meta.className = "meta"; meta.textContent = (market.curated ? "Curated series" : "Created by " + labelDid(market.from)) + " · " + predictions.length + " signed prediction record" + (predictions.length === 1 ? "" : "s");
+    const meta = document.createElement("div"); meta.className = "meta"; meta.textContent = (market.curated ? "Curated series" : "Created by " + labelDid(market.from)) + " · " + totalVotes + " signed forecast" + (totalVotes === 1 ? "" : "s");
     card.append(top, question, meta);
+    const pulse = document.createElement("div"); pulse.className = "sentiment";
+    const pulseLabel = document.createElement("div"); pulseLabel.className = "sentiment-label";
+    pulseLabel.textContent = totalVotes ? yesCount + " YES · " + noCount + " NO · " + totalVotes + " forecasts" : "Be the first to forecast";
+    const pulseBar = document.createElement("div"); pulseBar.className = "sentiment-bar";
+    pulseBar.setAttribute("role", "img");
+    pulseBar.setAttribute("aria-label", "Community split: " + yesCount + " YES and " + noCount + " NO");
+    const yesFill = document.createElement("span"); yesFill.className = "sentiment-yes";
+    yesFill.style.width = (totalVotes ? yesCount / totalVotes * 100 : 50) + "%";
+    const noFill = document.createElement("span"); noFill.className = "sentiment-no";
+    noFill.style.width = (totalVotes ? noCount / totalVotes * 100 : 50) + "%";
+    pulseBar.append(yesFill, noFill); pulse.append(pulseLabel, pulseBar); card.appendChild(pulse);
     if (p.sourceUrl) {
       const link = safeLink(p.sourceUrl, "Background source ↗");
       if (link) { const row = document.createElement("div"); row.className = "source"; row.appendChild(link); card.appendChild(row); }
@@ -232,37 +307,49 @@
       marketEl.appendChild(empty);
     }
   }
-  connectBtn.addEventListener("click", async () => {
-    connectBtn.disabled = true; walletMessage.textContent = "Approve wallet access, then choose an Ed25519 account matching your DID. sr25519 accounts can connect but cannot sign Technocore records.";
+  function persistWallet(choice) {
+    try { localStorage.setItem(WALLET_STORE, JSON.stringify({ source: choice.source, address: choice.account.address, type: choice.account.type || "" })); } catch {}
+  }
+  async function connectWallet(preferred = null, quiet = false) {
+    if (!quiet) connectBtn.disabled = true;
     try {
       const injected = window.injectedWeb3 || {};
-      let match = null;
-      for (const extension of Object.values(injected)) {
+      const entries = preferred?.source && injected[preferred.source] ? [[preferred.source, injected[preferred.source]]] : Object.entries(injected);
+      let choices = [];
+      for (const [source, extension] of entries) {
         if (typeof extension?.enable !== "function") continue;
         try {
-          const api = await extension.enable("FLOP Community Prediction Market");
+          const api = await extension.enable("FLOP AI Assistant");
           const accounts = await api?.accounts?.get?.();
-          if (accounts?.length && typeof api?.signer?.signRaw === "function") {
-            match = { accounts, signer: api.signer }; break;
-          }
+          if (accounts?.length && typeof api?.signer?.signRaw === "function") choices.push(...accounts.map(account => ({ account, signer: api.signer, source })));
         } catch {}
       }
-      if (!match) throw new Error("No compatible Polkadot wallet found. Install/enable a wallet extension and try again.");
-      signer = match.signer; accountList = match.accounts;
-      accountEl.replaceChildren();
-      accountList.forEach(item => {
-        const option = document.createElement("option"); option.value = item.address;
-        option.textContent = item.address + (item.type ? " · " + item.type : "");
-        accountEl.appendChild(option);
-      });
-      accountEl.disabled = false; connectBtn.textContent = "Wallet connected";
-      walletMessage.textContent = "Wallet connected. FLOP supports sr25519 and Ed25519 Substrate accounts; choose the Ed25519 account matching your DID to publish a forecast. EVM wallets cannot sign FLOP transactions.";
+      if (!choices.length) throw new Error("Unlock a Polkadot-compatible wallet extension and allow this site to connect.");
+      accountList = choices; accountEl.replaceChildren();
+      accountList.forEach(item => { const option = document.createElement("option"); option.value = item.account.address; option.textContent = shortAddress(item.account.address) + " · " + (item.account.type || "account"); accountEl.appendChild(option); });
+      const savedIndex = accountList.findIndex(item => item.account.address === preferred?.address && (!preferred?.source || item.source === preferred.source));
+      const edIndex = accountList.findIndex(item => isEd25519(item.account));
+      const selected = accountList[savedIndex >= 0 ? savedIndex : edIndex >= 0 ? edIndex : 0];
+      accountEl.value = selected.account.address; signer = selected.signer;
+      accountEl.hidden = accountList.length < 2; accountEl.disabled = false;
+      persistWallet(selected); connectBtn.textContent = "Connected · " + shortAddress(selected.account.address);
+      connectBtn.title = "Wallet connected. Click to refresh wallet access.";
       updateWalletControls();
-    } catch (error) { walletMessage.textContent = error.message || "Could not connect the wallet."; }
-    finally { connectBtn.disabled = false; }
+    } catch (error) {
+      if (!quiet) { connectBtn.textContent = "Connect wallet"; walletMessage.hidden = false; walletMessage.textContent = error.message || "Could not connect the wallet."; }
+    } finally { if (!quiet) connectBtn.disabled = false; }
+  }
+  connectBtn.addEventListener("click", () => connectWallet());
+  accountEl.addEventListener("change", () => {
+    const selected = accountList.find(item => item.account.address === accountEl.value);
+    signer = selected?.signer || null;
+    if (selected) { persistWallet(selected); connectBtn.textContent = "Connected · " + shortAddress(selected.account.address); }
+    updateWalletControls();
   });
-  accountEl.addEventListener("change", updateWalletControls);
-  didEl.addEventListener("input", updateWalletControls);
+  try {
+    const savedWallet = JSON.parse(localStorage.getItem(WALLET_STORE) || "null");
+    if (savedWallet?.address && savedWallet?.source) connectWallet(savedWallet, true);
+  } catch {}
   document.querySelectorAll(".tab").forEach(button => button.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(item => item.classList.toggle("active", item === button));
     filter = button.dataset.filter; render();
